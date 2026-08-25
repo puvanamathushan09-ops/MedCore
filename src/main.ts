@@ -21,8 +21,8 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  await app.listen(port);
-  logger.log(`🚀 MedCore Backend Foundation running on port ${port}`);
+  await app.listen(port, '0.0.0.0');
+  logger.log(`🚀 MedCore Backend Foundation running on http://0.0.0.0:${port}`);
 }
 
 bootstrap();
