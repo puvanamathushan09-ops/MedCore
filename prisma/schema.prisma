@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  MEDICAL_REVIEWER
+  ADMIN
+}
+
+model User {
+  id           String          @id @default(uuid()) @db.Uuid
+  email        String          @unique
+  passwordHash String          @map("password_hash")
+  role         Role            @default(STUDENT)
+  firstName    String          @map("first_name")
+  lastName     String          @map("last_name")
+  avatarUrl    String?         @map("avatar_url")
+  isActive     Boolean         @default(true) @map("is_active")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+
+  studentProfile StudentProfile?
+
+  @@map("users")
+}
+
+model StudentProfile {
+  id                     String   @id @default(uuid()) @db.Uuid
+  userId                 String   @unique @map("user_id") @db.Uuid
+  medicalSchool          String?  @map("medical_school")
+  yearOfStudy            Int?     @map("year_of_study")
+  targetExam             String?  @map("target_exam")
+  specializationInterest String?  @map("specialization_interest")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("student_profiles")
+}
+
+model Subject {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  slug        String   @unique
+  description String?
+  iconUrl     String?  @map("icon_url")
+  orderIndex  Int      @default(0) @map("order_index")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  topics Topic[]
+
+  @@map("subjects")
+}
+
+model Topic {
+  id          String   @id @default(uuid()) @db.Uuid
+  subjectId   String   @map("subject_id") @db.Uuid
+  parentId    String?  @map("parent_id") @db.Uuid
+  title       String
+  slug        String   @unique
+  description String?
+  orderIndex  Int      @default(0) @map("order_index")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  parent    Topic?  @relation("TopicHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  subtopics Topic[] @relation("TopicHierarchy")
+
+  @@map("topics")
+}
