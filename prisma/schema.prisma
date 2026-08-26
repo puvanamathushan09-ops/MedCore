@@ -20,7 +20,7 @@ model User {
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
   studentProfile StudentProfile?
-  articles       Article[]
+  articles       Article[]       @relation("UserArticles")
 
   @@map("users")
 }
@@ -49,7 +49,7 @@ model Subject {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   topics      Topic[]
-  articles    Article[]
+  articles    Article[] @relation("SubjectArticles")
 
   @@map("subjects")
 }
@@ -67,7 +67,7 @@ model Topic {
   orderIndex  Int       @default(0) @map("order_index")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
-  articles    Article[]
+  articles    Article[] @relation("TopicArticles")
 
   @@map("topics")
 }
@@ -84,26 +84,27 @@ enum ArticleStatus {
 }
 
 model Article {
-  id            String        @id @default(uuid()) @db.Uuid
-  title         String
-  slug          String        @unique
-  content       String        @db.Text
-  summary       String?       @db.Text
-  featuredImage String?       @map("featured_image")
-  status        ArticleStatus @default(DRAFT)
-  authorId      String        @map("author_id") @db.Uuid
-  author        User          @relation(fields: [authorId], references: [id], onDelete: Restrict)
-  subjectId     String        @map("subject_id") @db.Uuid
-  subject       Subject       @relation(fields: [subjectId], references: [id], onDelete: Restrict)
-  topicId       String?       @map("topic_id") @db.Uuid
-  topic         Topic?        @relation(fields: [topicId], references: [id], onDelete: SetNull)
-  publishedAt   DateTime?     @map("published_at")
-  createdAt     DateTime      @default(now()) @map("created_at")
-  updatedAt     DateTime      @updatedAt @map("updated_at")
+  id               String        @id @default(uuid()) @db.Uuid
+  title            String
+  slug             String        @unique
+  summary          String?       @db.Text
+  content          String        @db.Text
+  featuredImageUrl String?       @map("featured_image_url")
+  status           ArticleStatus @default(DRAFT)
+  authorId         String        @map("author_id") @db.Uuid
+  author           User          @relation("UserArticles", fields: [authorId], references: [id], onDelete: Restrict)
+  subjectId        String        @map("subject_id") @db.Uuid
+  subject          Subject       @relation("SubjectArticles", fields: [subjectId], references: [id], onDelete: Restrict)
+  topicId          String?       @map("topic_id") @db.Uuid
+  topic            Topic?        @relation("TopicArticles", fields: [topicId], references: [id], onDelete: SetNull)
+  publishedAt      DateTime?     @map("published_at")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
 
-  @@index([status])
-  @@index([subjectId])
   @@index([authorId])
+  @@index([subjectId])
+  @@index([topicId])
+  @@index([status])
+  @@index([createdAt])
   @@map("articles")
 }
-
