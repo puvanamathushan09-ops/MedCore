@@ -25,7 +25,7 @@ export class UpdateArticleDto {
   @IsString()
   @IsOptional()
   @IsUrl()
-  featuredImage?: string;
+  featuredImageUrl?: string;
 
   @IsEnum(ArticleStatus)
   @IsOptional()

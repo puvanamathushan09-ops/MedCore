@@ -45,7 +45,7 @@ describe('ArticlesService', () => {
     slug: 'understanding-acute-appendicitis',
     content: 'Full medical article content here...',
     summary: 'Brief summary of appendicitis.',
-    featuredImage: 'https://example.com/image.png',
+    featuredImageUrl: 'https://example.com/image.png',
     status: ArticleStatus.PUBLISHED,
     authorId: mockUser.id,
     subjectId: mockSubject.id,
@@ -69,6 +69,9 @@ describe('ArticlesService', () => {
 
   beforeEach(async () => {
     const mockPrisma = {
+      user: {
+        findUnique: jest.fn(),
+      },
       subject: {
         findUnique: jest.fn(),
       },
@@ -105,6 +108,7 @@ describe('ArticlesService', () => {
 
   describe('create', () => {
     it('should create an article successfully with valid subject and topic', async () => {
+      (prismaService.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
       (prismaService.subject.findUnique as jest.Mock).mockResolvedValue(mockSubject);
       (prismaService.topic.findUnique as jest.Mock).mockResolvedValue(mockTopic);
       (prismaService.article.findUnique as jest.Mock).mockResolvedValue(null);
@@ -114,7 +118,7 @@ describe('ArticlesService', () => {
         title: 'Understanding Acute Appendicitis',
         content: 'Full medical article content here...',
         summary: 'Brief summary of appendicitis.',
-        featuredImage: 'https://example.com/image.png',
+        featuredImageUrl: 'https://example.com/image.png',
         status: ArticleStatus.PUBLISHED,
         subjectId: mockSubject.id,
         topicId: mockTopic.id,
@@ -122,6 +126,9 @@ describe('ArticlesService', () => {
 
       const result = await service.create(dto, mockUser.id);
 
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { id: mockUser.id },
+      });
       expect(prismaService.subject.findUnique).toHaveBeenCalledWith({
         where: { id: mockSubject.id },
       });
@@ -129,13 +136,45 @@ describe('ArticlesService', () => {
       expect(result).toEqual(mockArticle);
     });
 
+    it('should throw BadRequestException if author does not exist', async () => {
+      (prismaService.user.findUnique as jest.Mock).mockResolvedValue(null);
+
+      const dto = {
+        title: 'Title',
+        content: 'Content',
+        subjectId: mockSubject.id,
+      };
+
+      await expect(service.create(dto, 'non-existent-author')).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
     it('should throw BadRequestException if subject does not exist', async () => {
+      (prismaService.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
       (prismaService.subject.findUnique as jest.Mock).mockResolvedValue(null);
 
       const dto = {
         title: 'Title',
         content: 'Content',
         subjectId: 'non-existent-subject',
+      };
+
+      await expect(service.create(dto, mockUser.id)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should throw BadRequestException if supplied topicId does not exist', async () => {
+      (prismaService.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
+      (prismaService.subject.findUnique as jest.Mock).mockResolvedValue(mockSubject);
+      (prismaService.topic.findUnique as jest.Mock).mockResolvedValue(null);
+
+      const dto = {
+        title: 'Title',
+        content: 'Content',
+        subjectId: mockSubject.id,
+        topicId: 'invalid-topic-id',
       };
 
       await expect(service.create(dto, mockUser.id)).rejects.toThrow(
@@ -175,6 +214,68 @@ describe('ArticlesService', () => {
       );
       expect(result.data[0].status).toEqual(ArticleStatus.DRAFT);
     });
+
+    it('should return multiple articles ordered by createdAt desc', async () => {
+      const articlesList = [mockArticle, mockDraftArticle];
+      (prismaService.article.findMany as jest.Mock).mockResolvedValue(articlesList);
+      (prismaService.article.count as jest.Mock).mockResolvedValue(2);
+
+      const result = await service.findAll({}, Role.ADMIN);
+
+      expect(prismaService.article.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: { createdAt: 'desc' },
+        }),
+      );
+      expect(result.data).toHaveLength(2);
+    });
+
+    it('should filter by subjectId when subjectId query param is provided', async () => {
+      (prismaService.article.findMany as jest.Mock).mockResolvedValue([mockArticle]);
+      (prismaService.article.count as jest.Mock).mockResolvedValue(1);
+
+      const query = { subjectId: mockSubject.id };
+      await service.findAll(query, Role.ADMIN);
+
+      expect(prismaService.article.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ subjectId: mockSubject.id }),
+        }),
+      );
+    });
+
+    it('should filter by topicId when topicId query param is provided', async () => {
+      (prismaService.article.findMany as jest.Mock).mockResolvedValue([mockArticle]);
+      (prismaService.article.count as jest.Mock).mockResolvedValue(1);
+
+      const query = { topicId: mockTopic.id };
+      await service.findAll(query, Role.ADMIN);
+
+      expect(prismaService.article.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ topicId: mockTopic.id }),
+        }),
+      );
+    });
+
+    it('should filter by search term when non-empty search query param is provided', async () => {
+      (prismaService.article.findMany as jest.Mock).mockResolvedValue([mockArticle]);
+      (prismaService.article.count as jest.Mock).mockResolvedValue(1);
+
+      const query = { search: ' appendicitis ' };
+      await service.findAll(query, Role.ADMIN);
+
+      expect(prismaService.article.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            OR: [
+              { title: { contains: 'appendicitis', mode: 'insensitive' } },
+              { summary: { contains: 'appendicitis', mode: 'insensitive' } },
+            ],
+          }),
+        }),
+      );
+    });
   });
 
   describe('findBySlug', () => {
@@ -198,6 +299,187 @@ describe('ArticlesService', () => {
 
       const result = await service.findBySlug(mockDraftArticle.slug, Role.ADMIN);
       expect(result).toEqual(mockDraftArticle);
+    });
+
+    it('should return DRAFT article for MEDICAL_REVIEWER role', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockDraftArticle);
+
+      const result = await service.findBySlug(mockDraftArticle.slug, Role.MEDICAL_REVIEWER);
+      expect(result).toEqual(mockDraftArticle);
+    });
+
+    it('should throw NotFoundException when slug does not exist', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(null);
+
+      await expect(
+        service.findBySlug('non-existent-slug', Role.STUDENT),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('findById', () => {
+    it('should return existing article by ID', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockArticle);
+
+      const result = await service.findById(mockArticle.id, Role.STUDENT);
+
+      expect(prismaService.article.findUnique).toHaveBeenCalledWith({
+        where: { id: mockArticle.id },
+        include: {
+          author: { select: expect.any(Object) },
+          subject: true,
+          topic: true,
+        },
+      });
+      expect(result).toEqual(mockArticle);
+    });
+
+    it('should throw NotFoundException when article ID does not exist', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(null);
+
+      await expect(
+        service.findById('non-existent-id', Role.STUDENT),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw NotFoundException when STUDENT accesses DRAFT article by ID', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockDraftArticle);
+
+      await expect(
+        service.findById(mockDraftArticle.id, Role.STUDENT),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should return DRAFT article by ID for MEDICAL_REVIEWER role', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockDraftArticle);
+
+      const result = await service.findById(mockDraftArticle.id, Role.MEDICAL_REVIEWER);
+      expect(result).toEqual(mockDraftArticle);
+    });
+  });
+
+  describe('update', () => {
+    it('should update an article successfully when valid fields are supplied', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockArticle);
+      (prismaService.subject.findUnique as jest.Mock).mockResolvedValue(mockSubject);
+      (prismaService.article.update as jest.Mock).mockResolvedValue({
+        ...mockArticle,
+        title: 'Updated Appendicitis Title',
+      });
+
+      const updateDto = {
+        title: 'Updated Appendicitis Title',
+      };
+
+      const result = await service.update(mockArticle.id, updateDto);
+
+      expect(prismaService.article.findUnique).toHaveBeenCalledWith({
+        where: { id: mockArticle.id },
+      });
+      expect(prismaService.article.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: mockArticle.id },
+          data: expect.objectContaining({
+            title: 'Updated Appendicitis Title',
+          }),
+        }),
+      );
+      expect(result.title).toBe('Updated Appendicitis Title');
+    });
+
+    it('should update only supplied fields and preserve unsupplied fields', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockArticle);
+      (prismaService.article.update as jest.Mock).mockResolvedValue({
+        ...mockArticle,
+        summary: 'Updated summary only',
+      });
+
+      const updateDto = {
+        summary: 'Updated summary only',
+      };
+
+      await service.update(mockArticle.id, updateDto);
+
+      expect(prismaService.article.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: mockArticle.id },
+          data: expect.objectContaining({
+            summary: 'Updated summary only',
+          }),
+        }),
+      );
+    });
+
+    it('should set publishedAt date when status transitions from DRAFT to PUBLISHED', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockDraftArticle);
+      (prismaService.article.update as jest.Mock).mockResolvedValue({
+        ...mockDraftArticle,
+        status: ArticleStatus.PUBLISHED,
+        publishedAt: new Date(),
+      });
+
+      await service.update(mockDraftArticle.id, { status: ArticleStatus.PUBLISHED });
+
+      expect(prismaService.article.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: mockDraftArticle.id },
+          data: expect.objectContaining({
+            status: ArticleStatus.PUBLISHED,
+            publishedAt: expect.any(Date),
+          }),
+        }),
+      );
+    });
+
+    it('should throw NotFoundException when updating an article that does not exist', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(null);
+
+      await expect(
+        service.update('non-existent-id', { title: 'New Title' }),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw BadRequestException if supplied subjectId does not exist', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockArticle);
+      (prismaService.subject.findUnique as jest.Mock).mockResolvedValue(null);
+
+      await expect(
+        service.update(mockArticle.id, { subjectId: 'invalid-subject-id' }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw BadRequestException if supplied topicId does not exist', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockArticle);
+      (prismaService.topic.findUnique as jest.Mock).mockResolvedValue(null);
+
+      await expect(
+        service.update(mockArticle.id, { topicId: 'invalid-topic-id' }),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('remove', () => {
+    it('should delete an article successfully when it exists', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockArticle);
+      (prismaService.article.delete as jest.Mock).mockResolvedValue(mockArticle);
+
+      const result = await service.remove(mockArticle.id);
+
+      expect(prismaService.article.findUnique).toHaveBeenCalledWith({
+        where: { id: mockArticle.id },
+      });
+      expect(prismaService.article.delete).toHaveBeenCalledWith({
+        where: { id: mockArticle.id },
+      });
+      expect(result).toEqual({ message: 'Article deleted successfully' });
+    });
+
+    it('should throw NotFoundException when deleting an article that does not exist', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(null);
+
+      await expect(service.remove('non-existent-id')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

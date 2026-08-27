@@ -47,7 +47,7 @@ export class ArticlesController {
     return this.articlesService.findAll(query, user?.role);
   }
 
-  @Get(':slug')
+  @Get('slug/:slug')
   @UseGuards(OptionalJwtAuthGuard)
   async findBySlug(
     @Param('slug') slug: string,
@@ -57,7 +57,7 @@ export class ArticlesController {
   }
 
   @Get('id/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(OptionalJwtAuthGuard)
   async findById(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user?: { role?: Role },

@@ -25,6 +25,14 @@ export class ArticlesService {
   async create(createArticleDto: CreateArticleDto, authorId: string) {
     const { subjectId, topicId, title, status, ...rest } = createArticleDto;
 
+    // Verify Author exists
+    const author = await this.prisma.user.findUnique({
+      where: { id: authorId },
+    });
+    if (!author) {
+      throw new BadRequestException(`Author with ID '${authorId}' not found`);
+    }
+
     // Verify Subject exists
     const subject = await this.prisma.subject.findUnique({
       where: { id: subjectId },

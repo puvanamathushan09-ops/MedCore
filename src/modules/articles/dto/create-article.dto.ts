@@ -26,7 +26,7 @@ export class CreateArticleDto {
   @IsString()
   @IsOptional()
   @IsUrl()
-  featuredImage?: string;
+  featuredImageUrl?: string;
 
   @IsEnum(ArticleStatus)
   @IsOptional()
