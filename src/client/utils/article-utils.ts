@@ -44,3 +44,22 @@ export const buildQueryArticleParams = (
 
   return params;
 };
+
+export const parsePlainTextParagraphs = (content?: string | null): string[] => {
+  if (!content || typeof content !== 'string') return [];
+  return content
+    .split(/\r?\n\s*\r?\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph.length > 0);
+};
+
+export const getSlugFromUrl = (pathname?: string): string | null => {
+  const currentPath = pathname ?? (typeof window !== 'undefined' ? window.location.pathname : '');
+  if (currentPath.startsWith('/articles/')) {
+    const slug = currentPath.replace('/articles/', '').trim();
+    if (slug) return slug;
+  }
+  return null;
+};
+
+
