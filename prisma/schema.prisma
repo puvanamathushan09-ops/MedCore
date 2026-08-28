@@ -62,7 +62,7 @@ model Topic {
   parent      Topic?    @relation("TopicToTopic", fields: [parentId], references: [id], onDelete: Cascade)
   children    Topic[]   @relation("TopicToTopic")
   title       String
-  slug        String
+  slug        String    @unique
   description String?
   orderIndex  Int       @default(0) @map("order_index")
   createdAt   DateTime  @default(now()) @map("created_at")
