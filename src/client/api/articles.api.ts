@@ -1,5 +1,5 @@
 import { apiRequest } from './api-client';
-import {
+import type {
   Article,
   ArticleListResponse,
   CreateArticleInput,

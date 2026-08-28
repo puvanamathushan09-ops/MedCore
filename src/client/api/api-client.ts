@@ -1,4 +1,4 @@
-import { ApiErrorResponse } from '../types/article.types';
+import type { ApiErrorResponse } from '../types/article.types';
 
 export class ApiClientError extends Error {
   public readonly statusCode: number;
