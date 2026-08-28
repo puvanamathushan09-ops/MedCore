@@ -1,9 +1,15 @@
 import React from 'react';
+import type { Subject } from '../../../src/client/types/subject.types';
+import type { Topic } from '../../../src/client/types/topic.types';
 
 export interface ArticleFilterProps {
   search: string;
   subjectId: string;
   topicId: string;
+  subjects: Subject[];
+  topics: Topic[];
+  loadingSubjects?: boolean;
+  loadingTopics?: boolean;
   onSearchChange: (value: string) => void;
   onSubjectIdChange: (value: string) => void;
   onTopicIdChange: (value: string) => void;
@@ -14,6 +20,10 @@ export const ArticleFilter: React.FC<ArticleFilterProps> = ({
   search,
   subjectId,
   topicId,
+  subjects,
+  topics,
+  loadingSubjects = false,
+  loadingTopics = false,
   onSearchChange,
   onSubjectIdChange,
   onTopicIdChange,
@@ -23,6 +33,7 @@ export const ArticleFilter: React.FC<ArticleFilterProps> = ({
 
   return (
     <div className="medcore-filter-bar">
+      {/* Search Input */}
       <div className="filter-group search-group">
         <label htmlFor="article-search" className="filter-label">
           Search Articles
@@ -61,40 +72,62 @@ export const ArticleFilter: React.FC<ArticleFilterProps> = ({
         </div>
       </div>
 
+      {/* Subject Dropdown */}
       <div className="filter-group">
         <label htmlFor="subject-filter" className="filter-label">
-          Subject ID
+          Subject {loadingSubjects ? '(Loading...)' : ''}
         </label>
-        <input
+        <select
           id="subject-filter"
-          type="text"
-          className="filter-input"
-          placeholder="Filter by Subject UUID..."
+          className="filter-input filter-select"
           value={subjectId}
+          disabled={loadingSubjects}
           onChange={(e) => onSubjectIdChange(e.target.value)}
-        />
+          data-testid="subject-select"
+        >
+          <option value="">All Subjects</option>
+          {subjects.map((subject) => (
+            <option key={subject.id} value={subject.id}>
+              {subject.title}
+            </option>
+          ))}
+        </select>
       </div>
 
+      {/* Topic Dropdown */}
       <div className="filter-group">
         <label htmlFor="topic-filter" className="filter-label">
-          Topic ID
+          Topic {loadingTopics ? '(Loading...)' : ''}
         </label>
-        <input
+        <select
           id="topic-filter"
-          type="text"
-          className="filter-input"
-          placeholder="Filter by Topic UUID..."
+          className="filter-input filter-select"
           value={topicId}
+          disabled={!subjectId || loadingTopics}
           onChange={(e) => onTopicIdChange(e.target.value)}
-        />
+          data-testid="topic-select"
+        >
+          {!subjectId ? (
+            <option value="">Select a subject first...</option>
+          ) : (
+            <option value="">All Topics</option>
+          )}
+          {topics.map((topic) => (
+            <option key={topic.id} value={topic.id}>
+              {topic.title}
+            </option>
+          ))}
+        </select>
       </div>
 
+      {/* Reset Filters Button */}
       {hasActiveFilters ? (
         <div className="filter-group reset-group">
           <button
             type="button"
             className="btn btn-secondary reset-btn"
             onClick={onResetFilters}
+            data-testid="reset-filters-btn"
           >
             Reset Filters
           </button>
