@@ -1,0 +1,202 @@
+/* Subject Detail Container */
+.medcore-subject-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+/* Breadcrumb Navigation */
+.subject-breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.breadcrumb-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 500;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.breadcrumb-link-btn:hover {
+  color: var(--text-h);
+}
+
+.breadcrumb-separator {
+  color: var(--border);
+}
+
+.breadcrumb-current {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.breadcrumb-current.active {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+/* Subject Detail Header */
+.subject-detail-header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.subject-detail-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  margin-bottom: 12px;
+}
+
+.subject-detail-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-h);
+  letter-spacing: -1px;
+  margin: 0 0 12px 0;
+}
+
+.subject-detail-description {
+  font-size: 17px;
+  color: var(--text);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 760px;
+}
+
+/* Topics Section */
+.topics-section {
+  margin-bottom: 36px;
+}
+
+.topics-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.topics-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.topics-loading-tag {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.no-topics-notice {
+  font-size: 14px;
+  color: var(--text);
+  font-style: italic;
+}
+
+/* Topics Pill List */
+.topics-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.topic-pill {
+  background: var(--code-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.topic-pill:hover {
+  background: var(--bg);
+  color: var(--text-h);
+  border-color: var(--accent);
+}
+
+.topic-pill.active {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(170, 59, 255, 0.25);
+}
+
+/* Topic Articles Section */
+.topic-articles-section {
+  margin-top: 16px;
+}
+
+.articles-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.articles-section-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.results-count {
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* Skeleton Loading for Subject Detail */
+.subject-detail-skeleton {
+  padding: 24px 0;
+}
+
+.skeleton-subject-header {
+  height: 36px;
+  width: 40%;
+  background: var(--border);
+  border-radius: 6px;
+  margin-bottom: 16px;
+  animation: skeleton-pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-subject-sub {
+  height: 18px;
+  width: 70%;
+  background: var(--border);
+  border-radius: 4px;
+  margin-bottom: 32px;
+  animation: skeleton-pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-topics-bar {
+  height: 40px;
+  width: 100%;
+  background: var(--border);
+  border-radius: 9999px;
+  animation: skeleton-pulse 1.5s infinite ease-in-out;
+}
