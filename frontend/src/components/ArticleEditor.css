@@ -1,0 +1,197 @@
+/* MedCore Article Editor Styles */
+
+.article-editor-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+}
+
+.editor-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.editor-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-h);
+}
+
+.editor-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.btn-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-back-link:hover {
+  color: var(--text-h);
+  background: var(--surface-hover);
+}
+
+.editor-form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-h);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.field-required {
+  color: #ef4444;
+}
+
+.field-input,
+.field-select,
+.field-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.field-textarea {
+  min-height: 240px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.field-help {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.editor-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  margin-top: 12px;
+}
+
+.btn-editor-cancel {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-editor-cancel:hover {
+  background: var(--surface-hover);
+  color: var(--text-h);
+}
+
+.btn-editor-save-draft {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-editor-save-draft:hover {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.btn-editor-publish {
+  padding: 10px 24px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, var(--teal-500), var(--primary-500));
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-editor-publish:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(13, 148, 136, 0.35);
+}
+
+.editor-error-banner {
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 600;
+}

@@ -19,15 +19,24 @@ export interface RequestOptions extends RequestInit {
 
 export function getApiBaseUrl(): string {
   if (typeof process !== 'undefined' && process.env) {
+    if (process.env.NODE_ENV === 'test') {
+      return (
+        process.env.VITE_API_BASE_URL ||
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        process.env.REACT_APP_API_BASE_URL ||
+        process.env.API_BASE_URL ||
+        'http://localhost:3000'
+      );
+    }
     return (
       process.env.VITE_API_BASE_URL ||
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       process.env.REACT_APP_API_BASE_URL ||
       process.env.API_BASE_URL ||
-      'http://localhost:3000'
+      '/api'
     );
   }
-  return 'http://localhost:3000';
+  return '/api';
 }
 
 export async function apiRequest<T>(

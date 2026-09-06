@@ -1,0 +1,146 @@
+/* MedCore Sidebar Navigation Styles */
+
+.medcore-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 95;
+  transition: opacity 0.3s ease;
+}
+
+.medcore-sidebar {
+  width: 260px;
+  background-color: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);
+  position: sticky;
+  top: 64px;
+  z-index: 80;
+  transition: transform 0.3s ease, width 0.3s ease;
+  user-select: none;
+}
+
+.sidebar-nav-container {
+  padding: 20px 14px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sidebar-section-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-section-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 0 12px 6px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav-item:hover {
+  color: var(--text-h);
+  background: var(--surface-hover);
+}
+
+.sidebar-nav-item.active {
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.nav-item-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.nav-item-label {
+  flex: 1;
+}
+
+.nav-item-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--border-light);
+  color: var(--text-muted);
+}
+
+.sidebar-nav-item.active .nav-item-badge {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--bg);
+}
+
+.footer-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.platform-version {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.platform-subtitle {
+  font-size: 11px;
+}
+
+/* RESPONSIVE DRAWER FOR TABLET & MOBILE */
+@media (max-width: 1024px) {
+  .medcore-sidebar-backdrop.open {
+    display: block;
+  }
+
+  .medcore-sidebar {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    bottom: 0;
+    height: calc(100vh - 64px);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(-100%);
+    z-index: 100;
+  }
+
+  .medcore-sidebar.open {
+    transform: translateX(0);
+  }
+}

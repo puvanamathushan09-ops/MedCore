@@ -7,17 +7,19 @@ async function main() {
   console.log('🌱 Starting MedCore Phase 3 database seeding...');
 
   // 1. Create or update Default Medical Reviewer Author User
-  const defaultPasswordHash = await bcrypt.hash('DevReviewer2026!#MedCoreSecurePass', 10);
+  const reviewerPasswordHash = await bcrypt.hash('DevReviewer2026!#MedCoreSecurePass', 10);
   const author = await prisma.user.upsert({
     where: { email: 'reviewer@medcore.local' },
     update: {
+      passwordHash: reviewerPasswordHash,
       firstName: 'Dr. Sarah',
       lastName: 'Smith',
       role: Role.MEDICAL_REVIEWER,
+      isActive: true,
     },
     create: {
       email: 'reviewer@medcore.local',
-      passwordHash: defaultPasswordHash,
+      passwordHash: reviewerPasswordHash,
       firstName: 'Dr. Sarah',
       lastName: 'Smith',
       role: Role.MEDICAL_REVIEWER,
@@ -25,6 +27,28 @@ async function main() {
     },
   });
   console.log(`👤 Reviewer User seeded: ${author.email}`);
+
+  // 1b. Create or update Development Admin User
+  const adminPasswordHash = await bcrypt.hash('DevAdmin2026!#MedCoreSecurePass', 10);
+  const adminUser = await prisma.user.upsert({
+    where: { email: 'admin@medcore.local' },
+    update: {
+      passwordHash: adminPasswordHash,
+      firstName: 'Admin',
+      lastName: 'User',
+      role: Role.ADMIN,
+      isActive: true,
+    },
+    create: {
+      email: 'admin@medcore.local',
+      passwordHash: adminPasswordHash,
+      firstName: 'Admin',
+      lastName: 'User',
+      role: Role.ADMIN,
+      isActive: true,
+    },
+  });
+  console.log(`👤 Admin User seeded: ${adminUser.email}`);
 
   // 2. Create or update Subject: Anatomy
   const anatomySubject = await prisma.subject.upsert({

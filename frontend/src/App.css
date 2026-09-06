@@ -1,4 +1,4 @@
-/* MedCore App Core Layout Styles */
+/* MedCore App Application Shell Styles */
 
 .medcore-app {
   display: flex;
@@ -8,83 +8,32 @@
   color: var(--text);
 }
 
-.medcore-header {
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(8px);
-}
-
-.header-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px 20px;
+.medcore-shell-body {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.brand-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--accent);
-}
-
-.brand-icon {
-  width: 28px;
-  height: 28px;
-}
-
-.brand-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text-h);
-  letter-spacing: -0.5px;
-}
-
-.header-nav {
-  display: flex;
-  gap: 20px;
-}
-
-.nav-item {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text);
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: color 0.2s, background-color 0.2s;
-}
-
-.nav-item:hover {
-  color: var(--text-h);
-  background: var(--code-bg);
-}
-
-.nav-item.active {
-  color: var(--accent);
-  background: var(--accent-bg);
-  font-weight: 600;
+  flex: 1;
+  min-height: calc(100vh - 64px);
+  position: relative;
 }
 
 .medcore-main {
-  flex-grow: 1;
+  flex: 1;
+  min-width: 0;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
 }
 
 .medcore-footer {
   border-top: 1px solid var(--border);
-  padding: 24px 20px;
+  padding: 20px 24px;
   text-align: center;
   font-size: 13px;
-  color: var(--text);
-  background: var(--code-bg);
+  color: var(--text-muted);
+  background: var(--surface);
+  margin-top: auto;
 }
 
 .footer-container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
 }

@@ -1,0 +1,162 @@
+import React, { useState } from 'react';
+import { useAuth } from '../auth/AuthContext';
+import type { UserRole } from '../../../src/client/types/auth.types';
+import './Login.css';
+
+export interface LoginProps {
+  onLoginSuccess: (role: UserRole) => void;
+  onNavigateHome: () => void;
+}
+
+export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateHome }) => {
+  const { login, user } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // If user is already authenticated, notify success
+  React.useEffect(() => {
+    if (user?.role) {
+      onLoginSuccess(user.role);
+    }
+  }, [user, onLoginSuccess]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !password) {
+      setError('Please enter both your email address and password.');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      await login({ email: trimmedEmail, password });
+      // Upon successful login, the AuthContext state will update and trigger useEffect
+    } catch (err: any) {
+      setError(
+        err?.message ||
+          'Authentication failed. Please verify your email and password credentials.',
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="medcore-login-container">
+      <div className="login-card">
+        {/* BRAND HEADER */}
+        <div className="login-brand-header">
+          <div className="login-logo-wrapper" onClick={onNavigateHome} role="button" tabIndex={0}>
+            <svg
+              className="login-brand-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+          </div>
+          <h1 className="login-title">Sign in to MedCore</h1>
+          <p className="login-subtitle">
+            Peer-reviewed clinical learning, anatomical guides, and medical article management.
+          </p>
+        </div>
+
+        {/* ERROR BANNER */}
+        {error ? (
+          <div className="login-error-banner" data-testid="login-error">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span>{error}</span>
+          </div>
+        ) : null}
+
+        {/* LOGIN FORM */}
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="login-field-group">
+            <label htmlFor="login-email" className="login-field-label">
+              Email Address <span className="required-star">*</span>
+            </label>
+            <div className="input-with-icon">
+              <svg className="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+              <input
+                id="login-email"
+                type="email"
+                className="login-input"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={submitting}
+                autoComplete="email"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="login-field-group">
+            <label htmlFor="login-password" className="login-field-label">
+              Password <span className="required-star">*</span>
+            </label>
+            <div className="input-with-icon">
+              <svg className="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <input
+                id="login-password"
+                type="password"
+                className="login-input"
+                placeholder="••••••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={submitting}
+                autoComplete="current-password"
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="login-submit-btn"
+            disabled={submitting}
+            data-testid="login-submit-btn"
+          >
+            {submitting ? (
+              <span className="submit-loading">
+                <svg className="spinner-icon" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="3" />
+                </svg>
+                Authenticating...
+              </span>
+            ) : (
+              'Sign In to Account'
+            )}
+          </button>
+        </form>
+
+        {/* FOOTER INFO */}
+        <div className="login-footer-info">
+          <p className="role-access-hint">
+            Role-Based Access: Student, Medical Reviewer, and Admin portals require authorized credentials.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};

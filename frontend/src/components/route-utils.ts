@@ -1,12 +1,46 @@
 export type RouteState =
+  | { type: 'dashboard' }
+  | { type: 'reviewer-dashboard' }
+  | { type: 'create-article' }
+  | { type: 'edit-article'; articleId: string }
   | { type: 'article-list' }
   | { type: 'article-detail'; slug: string }
   | { type: 'subject-list' }
   | { type: 'subject-detail'; subjectSlug: string; topicSlug?: string }
-  | { type: 'topic-list' };
+  | { type: 'topic-list' }
+  | { type: 'login' };
 
 export function parseRoute(pathname?: string): RouteState {
   const path = pathname ?? (typeof window !== 'undefined' ? window.location.pathname : '/');
+
+  // Login route: /login
+  if (path === '/login' || path === '/login/') {
+    return { type: 'login' };
+  }
+
+  // Dashboard route: /dashboard
+  if (path === '/dashboard' || path === '/dashboard/') {
+    return { type: 'dashboard' };
+  }
+
+  // Reviewer Dashboard / Admin Portal: /reviewer or /admin
+  if (path === '/reviewer' || path === '/reviewer/' || path === '/admin' || path === '/admin/') {
+    return { type: 'reviewer-dashboard' };
+  }
+
+  // Create Article: /articles/new
+  if (path === '/articles/new' || path === '/articles/new/') {
+    return { type: 'create-article' };
+  }
+
+  // Edit Article: /articles/edit/:id
+  const editMatch = path.match(/^\/articles\/edit\/([^/]+)\/?$/);
+  if (editMatch) {
+    return {
+      type: 'edit-article',
+      articleId: editMatch[1],
+    };
+  }
 
   // Article detail: /articles/:slug
   if (path.startsWith('/articles/')) {
