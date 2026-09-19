@@ -8,6 +8,7 @@ export interface HeaderProps {
   isSidebarOpen: boolean;
   onNavigateHome: () => void;
   onNavigateToLogin?: () => void;
+  onNavigateToProfile?: () => void;
   currentRole?: UserRole;
   onRoleChange?: (role: UserRole) => void;
 }
@@ -16,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleSidebar,
   onNavigateHome,
   onNavigateToLogin,
+  onNavigateToProfile,
   currentRole = 'STUDENT',
 }) => {
   const { user, logout } = useAuth();
@@ -29,6 +31,14 @@ export const Header: React.FC<HeaderProps> = ({
         return 'Admin';
       default:
         return 'Medical Student';
+    }
+  };
+
+  const handleProfileClick = () => {
+    if (user && onNavigateToProfile) {
+      onNavigateToProfile();
+    } else if (!user && onNavigateToLogin) {
+      onNavigateToLogin();
     }
   };
 
@@ -122,10 +132,19 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           <div
-            className="user-profile-pill"
+            className="user-profile-pill clickable"
+            onClick={handleProfileClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleProfileClick();
+              }
+            }}
             title={
               user
-                ? `Logged in as ${user.firstName || ''} ${user.lastName || ''} (${getRoleBadgeLabel()})`
+                ? `Logged in as ${user.firstName || ''} ${user.lastName || ''} (${getRoleBadgeLabel()}) - Click to view profile`
                 : `User Profile - ${getRoleBadgeLabel()}`
             }
           >
@@ -134,6 +153,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <span className="user-role-label">{getRoleBadgeLabel()}</span>
           </div>
+
 
           {user ? (
             <button
@@ -164,5 +184,6 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
     </header>
+
   );
 };

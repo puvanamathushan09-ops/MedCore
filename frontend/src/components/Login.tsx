@@ -6,9 +6,14 @@ import './Login.css';
 export interface LoginProps {
   onLoginSuccess: (role: UserRole) => void;
   onNavigateHome: () => void;
+  onNavigateToRegister?: () => void;
 }
 
-export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateHome }) => {
+export const Login: React.FC<LoginProps> = ({
+  onLoginSuccess,
+  onNavigateHome,
+  onNavigateToRegister,
+}) => {
   const { login, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -152,6 +157,20 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onNavigateHome }) 
 
         {/* FOOTER INFO */}
         <div className="login-footer-info">
+          {onNavigateToRegister && (
+            <p className="auth-switch-text" style={{ marginBottom: '12px', fontSize: '13px', color: '#64748b' }}>
+              Don't have an account?{' '}
+              <button
+                type="button"
+                className="btn-auth-switch"
+                onClick={onNavigateToRegister}
+                data-testid="register-link-btn"
+                style={{ background: 'none', border: 'none', color: '#0ea5e9', fontWeight: 600, cursor: 'pointer', fontSize: '13px', textDecoration: 'underline' }}
+              >
+                Create Account
+              </button>
+            </p>
+          )}
           <p className="role-access-hint">
             Role-Based Access: Student, Medical Reviewer, and Admin portals require authorized credentials.
           </p>

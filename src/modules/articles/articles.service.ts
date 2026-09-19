@@ -20,7 +20,7 @@ const AUTHOR_SELECT = {
 
 @Injectable()
 export class ArticlesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createArticleDto: CreateArticleDto, authorId: string) {
     const { subjectId, topicId, title, status, ...rest } = createArticleDto;
@@ -257,14 +257,24 @@ export class ArticlesService {
       },
     });
   }
-
-  async remove(id: string) {
+  async remove(id: string, userRole: Role) {
     const existingArticle = await this.prisma.article.findUnique({
       where: { id },
     });
 
     if (!existingArticle) {
       throw new NotFoundException(`Article with ID '${id}' not found`);
+    }
+
+    // Medical Reviewers can delete only Draft articles.
+    // Admins can delete both Draft and Published articles.
+    if (
+      userRole === Role.MEDICAL_REVIEWER &&
+      existingArticle.status !== ArticleStatus.DRAFT
+    ) {
+      throw new BadRequestException(
+        'Medical Reviewers can delete only draft articles.',
+      );
     }
 
     await this.prisma.article.delete({

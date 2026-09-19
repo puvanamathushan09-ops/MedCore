@@ -1,6 +1,7 @@
 export type RouteState =
   | { type: 'dashboard' }
   | { type: 'reviewer-dashboard' }
+  | { type: 'apply-reviewer' }
   | { type: 'create-article' }
   | { type: 'edit-article'; articleId: string }
   | { type: 'article-list' }
@@ -8,7 +9,12 @@ export type RouteState =
   | { type: 'subject-list' }
   | { type: 'subject-detail'; subjectSlug: string; topicSlug?: string }
   | { type: 'topic-list' }
-  | { type: 'login' };
+  | { type: 'quiz-list' }
+  | { type: 'quiz-attempts' }
+  | { type: 'quiz-detail'; quizId: string }
+  | { type: 'login' }
+  | { type: 'register' }
+  | { type: 'profile' };
 
 export function parseRoute(pathname?: string): RouteState {
   const path = pathname ?? (typeof window !== 'undefined' ? window.location.pathname : '/');
@@ -18,10 +24,45 @@ export function parseRoute(pathname?: string): RouteState {
     return { type: 'login' };
   }
 
+  // Register route: /register
+  if (path === '/register' || path === '/register/') {
+    return { type: 'register' };
+  }
+
+  // Apply Reviewer route: /apply-reviewer
+  if (path === '/apply-reviewer' || path === '/apply-reviewer/' || path === '/reviewer/apply') {
+    return { type: 'apply-reviewer' };
+  }
+
+  // Profile route: /profile
+  if (path === '/profile' || path === '/profile/') {
+    return { type: 'profile' };
+  }
+
   // Dashboard route: /dashboard
   if (path === '/dashboard' || path === '/dashboard/') {
     return { type: 'dashboard' };
   }
+
+  // Quiz attempts: /quizzes/attempts (Must be checked BEFORE /quizzes/:quizId)
+  if (path === '/quizzes/attempts' || path === '/quizzes/attempts/') {
+    return { type: 'quiz-attempts' };
+  }
+
+  // Quiz list: /quizzes
+  if (path === '/quizzes' || path === '/quizzes/') {
+    return { type: 'quiz-list' };
+  }
+
+  // Quiz detail: /quizzes/:quizId
+  const quizDetailMatch = path.match(/^\/quizzes\/([^/]+)\/?$/);
+  if (quizDetailMatch) {
+    const id = quizDetailMatch[1];
+    if (id !== 'attempts') {
+      return { type: 'quiz-detail', quizId: id };
+    }
+  }
+
 
   // Reviewer Dashboard / Admin Portal: /reviewer or /admin
   if (path === '/reviewer' || path === '/reviewer/' || path === '/admin' || path === '/admin/') {

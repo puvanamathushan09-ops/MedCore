@@ -121,16 +121,26 @@ describe('ArticlesController', () => {
   });
 
   describe('remove', () => {
-    it('should delegate remove call to ArticlesService', async () => {
-      service.remove.mockResolvedValue({ message: 'Article deleted successfully' });
+    it('should delegate remove call to ArticlesService with user role', async () => {
+      service.remove.mockResolvedValue({
+        message: 'Article deleted successfully',
+      });
 
-      const result = await controller.remove(mockArticle.id);
+      const user = {
+        role: Role.MEDICAL_REVIEWER,
+      };
 
-      expect(service.remove).toHaveBeenCalledWith(mockArticle.id);
-      expect(result).toEqual({ message: 'Article deleted successfully' });
+      const result = await controller.remove(mockArticle.id, user);
+
+      expect(service.remove).toHaveBeenCalledWith(
+        mockArticle.id,
+        Role.MEDICAL_REVIEWER,
+      );
+      expect(result).toEqual({
+        message: 'Article deleted successfully',
+      });
     });
   });
-
   describe('Role-Based Authorization (RolesGuard)', () => {
     let rolesGuard: RolesGuard;
     let reflector: Reflector;
@@ -190,9 +200,9 @@ describe('ArticlesController', () => {
         expect(() => rolesGuard.canActivate(context)).toThrow(ForbiddenException);
       });
 
-      it('should forbid MEDICAL_REVIEWER from deleting articles', () => {
-        const context = createMockContext(controller.remove, Role.MEDICAL_REVIEWER);
-        expect(() => rolesGuard.canActivate(context)).toThrow(ForbiddenException);
+     it('should allow MEDICAL_REVIEWER to call delete endpoint', () => {
+       const context = createMockContext(controller.remove, Role.MEDICAL_REVIEWER);
+       expect(rolesGuard.canActivate(context)).toBe(true);
       });
 
       it('should allow ADMIN to delete articles', () => {

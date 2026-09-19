@@ -459,27 +459,72 @@ describe('ArticlesService', () => {
   });
 
   describe('remove', () => {
-    it('should delete an article successfully when it exists', async () => {
-      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(mockArticle);
-      (prismaService.article.delete as jest.Mock).mockResolvedValue(mockArticle);
+    it('should allow MEDICAL_REVIEWER to delete a DRAFT article', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(
+        mockDraftArticle,
+      );
+      (prismaService.article.delete as jest.Mock).mockResolvedValue(
+        mockDraftArticle,
+      );
 
-      const result = await service.remove(mockArticle.id);
+      const result = await service.remove(
+        mockDraftArticle.id,
+        Role.MEDICAL_REVIEWER,
+      );
 
       expect(prismaService.article.findUnique).toHaveBeenCalledWith({
-        where: { id: mockArticle.id },
+        where: { id: mockDraftArticle.id },
       });
+
+      expect(prismaService.article.delete).toHaveBeenCalledWith({
+        where: { id: mockDraftArticle.id },
+      });
+
+      expect(result).toEqual({
+        message: 'Article deleted successfully',
+      });
+    });
+
+    it('should prevent MEDICAL_REVIEWER from deleting a PUBLISHED article', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(
+        mockArticle,
+      );
+
+      await expect(
+        service.remove(mockArticle.id, Role.MEDICAL_REVIEWER),
+      ).rejects.toThrow(BadRequestException);
+
+      expect(prismaService.article.delete).not.toHaveBeenCalled();
+    });
+
+    it('should allow ADMIN to delete a PUBLISHED article', async () => {
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(
+        mockArticle,
+      );
+      (prismaService.article.delete as jest.Mock).mockResolvedValue(
+        mockArticle,
+      );
+
+      const result = await service.remove(mockArticle.id, Role.ADMIN);
+
       expect(prismaService.article.delete).toHaveBeenCalledWith({
         where: { id: mockArticle.id },
       });
-      expect(result).toEqual({ message: 'Article deleted successfully' });
+
+      expect(result).toEqual({
+        message: 'Article deleted successfully',
+      });
     });
 
     it('should throw NotFoundException when deleting an article that does not exist', async () => {
       (prismaService.article.findUnique as jest.Mock).mockResolvedValue(null);
 
-      await expect(service.remove('non-existent-id')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.remove('non-existent-id', Role.ADMIN),
+      ).rejects.toThrow(NotFoundException);
+
+      expect(prismaService.article.delete).not.toHaveBeenCalled();
     });
   });
 });
+

@@ -30,6 +30,19 @@ export class ProfileService {
             updatedAt: true,
           },
         },
+        reviewerProfile: {
+          select: {
+            id: true,
+            professionalTitle: true,
+            specialty: true,
+            qualifications: true,
+            institution: true,
+            bio: true,
+            expertise: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
       },
     });
 
@@ -47,6 +60,7 @@ export class ProfileService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       studentProfile: user.studentProfile || null,
+      reviewerProfile: user.reviewerProfile || null,
     };
   }
 
@@ -67,6 +81,12 @@ export class ProfileService {
       yearOfStudy,
       targetExam,
       specializationInterest,
+      professionalTitle,
+      specialty,
+      qualifications,
+      institution,
+      bio,
+      expertise,
     } = updateProfileDto;
 
     // Update User fields if provided
@@ -82,31 +102,64 @@ export class ProfileService {
       });
     }
 
-    // Upsert StudentProfile if any student profile fields are provided
-    const hasStudentFields =
-      medicalSchool !== undefined ||
-      yearOfStudy !== undefined ||
-      targetExam !== undefined ||
-      specializationInterest !== undefined;
+    // Process StudentProfile if user.role === 'STUDENT'
+    if (user.role === 'STUDENT') {
+      const hasStudentFields =
+        medicalSchool !== undefined ||
+        yearOfStudy !== undefined ||
+        targetExam !== undefined ||
+        specializationInterest !== undefined;
 
-    if (hasStudentFields) {
-      const studentData: Record<string, any> = {};
-      if (medicalSchool !== undefined) studentData.medicalSchool = medicalSchool;
-      if (yearOfStudy !== undefined) studentData.yearOfStudy = yearOfStudy;
-      if (targetExam !== undefined) studentData.targetExam = targetExam;
-      if (specializationInterest !== undefined)
-        studentData.specializationInterest = specializationInterest;
+      if (hasStudentFields) {
+        const studentData: Record<string, any> = {};
+        if (medicalSchool !== undefined) studentData.medicalSchool = medicalSchool;
+        if (yearOfStudy !== undefined) studentData.yearOfStudy = yearOfStudy;
+        if (targetExam !== undefined) studentData.targetExam = targetExam;
+        if (specializationInterest !== undefined)
+          studentData.specializationInterest = specializationInterest;
 
-      await this.prisma.studentProfile.upsert({
-        where: { userId },
-        update: studentData,
-        create: {
-          userId,
-          ...studentData,
-        },
-      });
+        await this.prisma.studentProfile.upsert({
+          where: { userId },
+          update: studentData,
+          create: {
+            userId,
+            ...studentData,
+          },
+        });
+      }
+    }
+
+    // Process ReviewerProfile if user.role === 'MEDICAL_REVIEWER'
+    if (user.role === 'MEDICAL_REVIEWER') {
+      const hasReviewerFields =
+        professionalTitle !== undefined ||
+        specialty !== undefined ||
+        qualifications !== undefined ||
+        institution !== undefined ||
+        bio !== undefined ||
+        expertise !== undefined;
+
+      if (hasReviewerFields) {
+        const reviewerData: Record<string, any> = {};
+        if (professionalTitle !== undefined) reviewerData.professionalTitle = professionalTitle;
+        if (specialty !== undefined) reviewerData.specialty = specialty;
+        if (qualifications !== undefined) reviewerData.qualifications = qualifications;
+        if (institution !== undefined) reviewerData.institution = institution;
+        if (bio !== undefined) reviewerData.bio = bio;
+        if (expertise !== undefined) reviewerData.expertise = expertise;
+
+        await this.prisma.reviewerProfile.upsert({
+          where: { userId },
+          update: reviewerData,
+          create: {
+            userId,
+            ...reviewerData,
+          },
+        });
+      }
     }
 
     return this.getProfile(userId);
   }
 }
+

@@ -25,7 +25,7 @@ import { Role } from '@prisma/client';
 
 @Controller('articles')
 export class ArticlesController {
-  constructor(private readonly articlesService: ArticlesService) {}
+  constructor(private readonly articlesService: ArticlesService) { }
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -77,9 +77,12 @@ export class ArticlesController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.MEDICAL_REVIEWER, Role.ADMIN)
   @HttpCode(HttpStatus.OK)
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.articlesService.remove(id);
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: { role: Role },
+  ) {
+    return this.articlesService.remove(id, user.role);
   }
 }

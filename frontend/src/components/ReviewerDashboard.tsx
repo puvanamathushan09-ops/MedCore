@@ -3,6 +3,7 @@ import { ArticlesApiClient } from '../../../src/client/api/articles.api';
 import { getAccessToken } from '../auth/auth-storage';
 import { useAuth } from '../auth/AuthContext';
 import type { Article, ArticleStatus } from '../../../src/client/types/article.types';
+import { AdminApplicationReview } from './AdminApplicationReview';
 import './ReviewerDashboard.css';
 
 export interface ReviewerDashboardProps {
@@ -17,6 +18,11 @@ export const ReviewerDashboard: React.FC<ReviewerDashboardProps> = ({
   const { user } = useAuth();
 
   const isReviewerOrAdmin = user?.role === 'MEDICAL_REVIEWER' || user?.role === 'ADMIN';
+  const isAdmin = user?.role === 'ADMIN';
+
+  console.log('ReviewerDashboard user:', user);
+  console.log('ReviewerDashboard role:', user?.role);
+  console.log('isReviewerOrAdmin:', isReviewerOrAdmin);
 
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,7 +31,12 @@ export const ReviewerDashboard: React.FC<ReviewerDashboardProps> = ({
   const [statusFilter, setStatusFilter] = useState<'ALL' | ArticleStatus>('ALL');
   const [searchTerm, setSearchTerm] = useState<string>('');
 
+  // Admin Tab State
+  const [activeAdminTab, setActiveAdminTab] = useState<'ARTICLES' | 'REVIEWERS'>('ARTICLES');
+
   const fetchArticles = useCallback(async () => {
+    console.log('FETCH ARTICLES CALLED');
+
     setLoading(true);
     setError(null);
     const token = getAccessToken() || undefined;
@@ -39,7 +50,11 @@ export const ReviewerDashboard: React.FC<ReviewerDashboardProps> = ({
         },
         token,
       );
+
+      console.log('ARTICLES RESPONSE:', response);
+
       setArticles(response.data || []);
+
     } catch (err: any) {
       setError(err?.message || 'Failed to load reviewer articles.');
     } finally {
@@ -99,174 +114,219 @@ export const ReviewerDashboard: React.FC<ReviewerDashboardProps> = ({
 
   return (
     <div className="reviewer-dashboard-container">
-      {/* REVIEWER HEADER */}
-      <div className="reviewer-header">
-        <div className="reviewer-title-group">
-          <span className="reviewer-badge">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            Reviewer Workspace
-          </span>
-          <h1 className="reviewer-title">Medical Reviewer Dashboard</h1>
-          <p className="reviewer-subtitle">
-            Manage, author, review, and publish peer-reviewed clinical articles and anatomical guides.
-          </p>
+      {/* ADMIN WORKSPACE TABS */}
+      {isAdmin && (
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid #cbd5e1', paddingBottom: '0.75rem' }}>
+          <button
+            type="button"
+            onClick={() => setActiveAdminTab('ARTICLES')}
+            style={{
+              background: activeAdminTab === 'ARTICLES' ? '#2563eb' : '#f1f5f9',
+              color: activeAdminTab === 'ARTICLES' ? '#ffffff' : '#475569',
+              border: 'none',
+              padding: '0.5rem 1.25rem',
+              borderRadius: '6px',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+            data-testid="admin-tab-articles"
+          >
+            Clinical Articles Management
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveAdminTab('REVIEWERS')}
+            style={{
+              background: activeAdminTab === 'REVIEWERS' ? '#2563eb' : '#f1f5f9',
+              color: activeAdminTab === 'REVIEWERS' ? '#ffffff' : '#475569',
+              border: 'none',
+              padding: '0.5rem 1.25rem',
+              borderRadius: '6px',
+              fontWeight: 600,
+              cursor: 'pointer',
+            }}
+            data-testid="admin-tab-reviewers"
+          >
+            Reviewer Applications & Verification
+          </button>
         </div>
+      )}
 
-        <button type="button" className="btn-create-article" onClick={onCreateArticle}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          Create New Article
-        </button>
-      </div>
+      {isAdmin && activeAdminTab === 'REVIEWERS' ? (
+        <AdminApplicationReview />
+      ) : (
+        <>
+          {/* REVIEWER HEADER */}
+          <div className="reviewer-header">
+            <div className="reviewer-title-group">
+              <span className="reviewer-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Reviewer Workspace
+              </span>
+              <h1 className="reviewer-title">Medical Reviewer Dashboard</h1>
+              <p className="reviewer-subtitle">
+                Manage, author, review, and publish peer-reviewed clinical articles and anatomical guides.
+              </p>
+            </div>
 
-      {/* STATS OVERVIEW CARDS */}
-      <div className="reviewer-stats-grid">
-        <div className="reviewer-stat-card">
-          <span className="stat-label">Total Articles</span>
-          <span className="stat-value">{totalCount}</span>
-          <span className="stat-subtext">In Reviewer Database</span>
-        </div>
-
-        <div className="reviewer-stat-card">
-          <span className="stat-label">Drafts</span>
-          <span className="stat-value" style={{ color: '#d97706' }}>
-            {draftCount}
-          </span>
-          <span className="stat-subtext">Work in Progress</span>
-        </div>
-
-        <div className="reviewer-stat-card">
-          <span className="stat-label">Published</span>
-          <span className="stat-value" style={{ color: 'var(--teal-500)' }}>
-            {publishedCount}
-          </span>
-          <span className="stat-subtext">Live for Students</span>
-        </div>
-      </div>
-
-      {/* ARTICLES TABLE SECTION */}
-      <div className="reviewer-table-card">
-        <div className="table-toolbar">
-          <div className="filter-pills">
-            <button
-              type="button"
-              className={`pill-btn ${statusFilter === 'ALL' ? 'active' : ''}`}
-              onClick={() => setStatusFilter('ALL')}
-            >
-              All ({totalCount})
-            </button>
-            <button
-              type="button"
-              className={`pill-btn ${statusFilter === 'DRAFT' ? 'active' : ''}`}
-              onClick={() => setStatusFilter('DRAFT')}
-            >
-              Drafts ({draftCount})
-            </button>
-            <button
-              type="button"
-              className={`pill-btn ${statusFilter === 'PUBLISHED' ? 'active' : ''}`}
-              onClick={() => setStatusFilter('PUBLISHED')}
-            >
-              Published ({publishedCount})
+            <button type="button" className="btn-create-article" onClick={onCreateArticle}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Create New Article
             </button>
           </div>
 
-          <input
-            type="text"
-            className="table-search-input"
-            placeholder="Search articles by title or summary..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+          {/* STATS OVERVIEW CARDS */}
+          <div className="reviewer-stats-grid">
+            <div className="reviewer-stat-card">
+              <span className="stat-label">Total Articles</span>
+              <span className="stat-value">{totalCount}</span>
+              <span className="stat-subtext">In Reviewer Database</span>
+            </div>
 
-        {error ? (
-          <div style={{ padding: '24px', color: '#ef4444', fontWeight: 600 }}>{error}</div>
-        ) : null}
+            <div className="reviewer-stat-card">
+              <span className="stat-label">Drafts</span>
+              <span className="stat-value" style={{ color: '#d97706' }}>
+                {draftCount}
+              </span>
+              <span className="stat-subtext">Work in Progress</span>
+            </div>
 
-        {loading ? (
-          <div style={{ padding: '36px', textAlign: 'center', color: 'var(--text-muted)' }}>
-            Loading Reviewer Articles...
+            <div className="reviewer-stat-card">
+              <span className="stat-label">Published</span>
+              <span className="stat-value" style={{ color: 'var(--teal-500)' }}>
+                {publishedCount}
+              </span>
+              <span className="stat-subtext">Live for Students</span>
+            </div>
           </div>
-        ) : !loading && articles.length === 0 ? (
-          <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-muted)' }}>
-            No articles found matching the current filter.
-          </div>
-        ) : (
-          <div className="reviewer-table-wrapper">
-            <table className="reviewer-table">
-              <thead>
-                <tr>
-                  <th>Article Title & Summary</th>
-                  <th>Subject / Topic</th>
-                  <th>Status</th>
-                  <th>Last Updated</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {articles.map((article) => (
-                  <tr key={article.id}>
-                    <td>
-                      <div className="article-row-title">{article.title}</div>
-                      <div className="article-row-summary">
-                        {article.summary || 'No summary provided.'}
-                      </div>
-                    </td>
-                    <td>
-                      <div style={{ fontWeight: 600, color: 'var(--text-h)' }}>
-                        {article.subject?.title || 'Unassigned Subject'}
-                      </div>
-                      {article.topic?.title ? (
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                          {article.topic.title}
-                        </div>
-                      ) : null}
-                    </td>
-                    <td>
-                      <span
-                        className={`status-badge ${article.status === 'PUBLISHED' ? 'published' : 'draft'
-                          }`}
-                      >
-                        {article.status}
-                      </span>
-                    </td>
-                    <td>
-                      <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-                        {new Date(article.updatedAt).toLocaleDateString()}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="table-actions">
-                        <button
-                          type="button"
-                          className="btn-action-edit"
-                          onClick={() => onEditArticle(article.id)}
-                        >
-                          Edit
-                        </button>
-                        {user?.role === 'ADMIN' ? (
-                          <button
-                            type="button"
-                            className="btn-action-delete"
-                            onClick={() => handleDelete(article.id, article.title)}
+
+          {/* ARTICLES TABLE SECTION */}
+          <div className="reviewer-table-card">
+            <div className="table-toolbar">
+              <div className="filter-pills">
+                <button
+                  type="button"
+                  className={`pill-btn ${statusFilter === 'ALL' ? 'active' : ''}`}
+                  onClick={() => setStatusFilter('ALL')}
+                >
+                  All ({totalCount})
+                </button>
+                <button
+                  type="button"
+                  className={`pill-btn ${statusFilter === 'DRAFT' ? 'active' : ''}`}
+                  onClick={() => setStatusFilter('DRAFT')}
+                >
+                  Drafts ({draftCount})
+                </button>
+                <button
+                  type="button"
+                  className={`pill-btn ${statusFilter === 'PUBLISHED' ? 'active' : ''}`}
+                  onClick={() => setStatusFilter('PUBLISHED')}
+                >
+                  Published ({publishedCount})
+                </button>
+              </div>
+
+              <input
+                type="text"
+                className="table-search-input"
+                placeholder="Search articles by title or summary..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {error ? (
+              <div style={{ padding: '24px', color: '#ef4444', fontWeight: 600 }}>{error}</div>
+            ) : null}
+
+            {loading ? (
+              <div style={{ padding: '36px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                Loading Reviewer Articles...
+              </div>
+            ) : !loading && articles.length === 0 ? (
+              <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                No articles found matching the current filter.
+              </div>
+            ) : (
+              <div className="reviewer-table-wrapper">
+                <table className="reviewer-table">
+                  <thead>
+                    <tr>
+                      <th>Article Title & Summary</th>
+                      <th>Subject / Topic</th>
+                      <th>Status</th>
+                      <th>Last Updated</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {articles.map((article) => (
+                      <tr key={article.id}>
+                        <td>
+                          <div className="article-row-title">{article.title}</div>
+                          <div className="article-row-summary">
+                            {article.summary || 'No summary provided.'}
+                          </div>
+                        </td>
+                        <td>
+                          <div style={{ fontWeight: 600, color: 'var(--text-h)' }}>
+                            {article.subject?.title || 'Unassigned Subject'}
+                          </div>
+                          {article.topic?.title ? (
+                            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                              {article.topic.title}
+                            </div>
+                          ) : null}
+                        </td>
+                        <td>
+                          <span
+                            className={`status-badge ${article.status === 'PUBLISHED' ? 'published' : 'draft'
+                              }`}
                           >
-                            Delete
-                          </button>
-                        ) : null}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                            {article.status}
+                          </span>
+                        </td>
+                        <td>
+                          <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+                            {new Date(article.updatedAt).toLocaleDateString()}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="table-actions">
+                            <button
+                              type="button"
+                              className="btn-action-edit"
+                              onClick={() => onEditArticle(article.id)}
+                            >
+                              Edit
+                            </button>
+                            {(user?.role === 'ADMIN' ||
+                              (user?.role === 'MEDICAL_REVIEWER' && article.status === 'DRAFT')) ? (
+                              <button
+                                type="button"
+                                className="btn-action-delete"
+                                onClick={() => handleDelete(article.id, article.title)}
+                              >
+                                Delete
+                              </button>
+                            ) : null}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };

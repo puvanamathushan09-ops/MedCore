@@ -8,6 +8,8 @@ import { ArticlesModule } from './modules/articles/articles.module';
 import { SubjectsModule } from './modules/subjects/subjects.module';
 import { TopicsModule } from './modules/topics/topics.module';
 import { ProfileModule } from './modules/profile/profile.module';
+import { ReviewerApplicationsModule } from './modules/reviewer-applications/reviewer-applications.module';
+import { QuizzesModule } from './modules/quizzes/quizzes.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { ProfileModule } from './modules/profile/profile.module';
     SubjectsModule,
     TopicsModule,
     ProfileModule,
+    ReviewerApplicationsModule,
+    QuizzesModule,
   ],
 })
 export class AppModule {}

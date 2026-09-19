@@ -5,7 +5,7 @@ import './Sidebar.css';
 
 export interface SidebarProps {
   activeRoute: RouteState;
-  onNavigate: (type: 'dashboard' | 'reviewer-dashboard' | 'article-list' | 'subject-list' | 'topic-list') => void;
+  onNavigate: (type: 'dashboard' | 'reviewer-dashboard' | 'apply-reviewer' | 'article-list' | 'subject-list' | 'topic-list' | 'quiz-list') => void;
   isOpen: boolean;
   onCloseMobile: () => void;
   currentRole: UserRole;
@@ -20,13 +20,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const isDashboardActive = activeRoute.type === 'dashboard';
   const isReviewerActive = activeRoute.type === 'reviewer-dashboard' || activeRoute.type === 'create-article' || activeRoute.type === 'edit-article';
+  const isApplyReviewerActive = activeRoute.type === 'apply-reviewer';
   const isArticlesActive = activeRoute.type === 'article-list' || activeRoute.type === 'article-detail';
   const isSubjectsActive = activeRoute.type === 'subject-list' || activeRoute.type === 'subject-detail';
   const isTopicsActive = activeRoute.type === 'topic-list';
+  const isQuizzesActive = activeRoute.type === 'quiz-list' || activeRoute.type === 'quiz-detail' || activeRoute.type === 'quiz-attempts';
 
   const isReviewerOrAdmin = currentRole === 'MEDICAL_REVIEWER' || currentRole === 'ADMIN';
 
-  const handleSelectNav = (type: 'dashboard' | 'reviewer-dashboard' | 'article-list' | 'subject-list' | 'topic-list') => {
+  const handleSelectNav = (type: 'dashboard' | 'reviewer-dashboard' | 'apply-reviewer' | 'article-list' | 'subject-list' | 'topic-list' | 'quiz-list') => {
     onNavigate(type);
     onCloseMobile();
   };
@@ -133,6 +135,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </svg>
               <span className="nav-item-label">Topics</span>
             </button>
+
+            <button
+              type="button"
+              className={`sidebar-nav-item ${isQuizzesActive ? 'active' : ''}`}
+              onClick={() => handleSelectNav('quiz-list')}
+              data-testid="sidebar-quizzes-btn"
+            >
+              <svg
+                className="nav-item-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              <span className="nav-item-label">Quizzes</span>
+            </button>
           </div>
 
           {/* MEDICAL REVIEWER AUTHORING SECTION */}
@@ -163,7 +187,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </span>
               </button>
             </div>
-          ) : null}
+          ) : (
+            <div className="sidebar-section-group" style={{ marginTop: '16px' }}>
+              <div className="sidebar-section-header">Become a Reviewer</div>
+
+              <button
+                type="button"
+                className={`sidebar-nav-item ${isApplyReviewerActive ? 'active' : ''}`}
+                onClick={() => handleSelectNav('apply-reviewer')}
+                data-testid="sidebar-apply-reviewer-btn"
+              >
+                <svg
+                  className="nav-item-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="8.5" cy="7" r="4" />
+                  <line x1="20" y1="8" x2="20" y2="14" />
+                  <line x1="17" y1="11" x2="23" y2="11" />
+                </svg>
+                <span className="nav-item-label">Apply as Reviewer</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* SIDEBAR FOOTER */}

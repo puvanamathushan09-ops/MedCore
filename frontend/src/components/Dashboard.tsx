@@ -8,12 +8,14 @@ export interface DashboardProps {
   onNavigateToSubjects: () => void;
   onNavigateToTopics: () => void;
   onNavigateToArticles: () => void;
+  onNavigateToQuizzes?: () => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
   onNavigateToSubjects,
   onNavigateToTopics,
   onNavigateToArticles,
+  onNavigateToQuizzes,
 }) => {
   const [stats, setStats] = useState({
     subjectsCount: 0,
@@ -235,6 +237,30 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </svg>
             </div>
           </div>
+          {onNavigateToQuizzes && (
+            <div className="quick-card" onClick={onNavigateToQuizzes}>
+              <div className="quick-card-header">
+                <div className="quick-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
+                <span className="quick-card-title">Medical Quizzes</span>
+              </div>
+              <p className="quick-card-desc">
+                Test your knowledge across core medical subjects and clinical topics with self-assessment quizzes.
+              </p>
+              <div className="quick-card-footer">
+                Take Quizzes
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>

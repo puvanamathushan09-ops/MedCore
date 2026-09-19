@@ -38,15 +38,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const refreshUser = async (): Promise<void> => {
         const token = getAccessToken();
 
+        console.log(
+            'AUTH refreshUser token:',
+            token ? 'TOKEN_EXISTS' : 'NO_TOKEN'
+        );
+
         if (!token) {
+            console.log('AUTH: No token, setting user to null');
             setUser(null);
             return;
         }
 
         try {
+            console.log('AUTH: Calling /auth/me...');
+
             const currentUser = await AuthApiClient.getMe(token);
+
+            console.log('AUTH getMe SUCCESS:', currentUser);
+
             setUser(currentUser);
-        } catch {
+
+            console.log('AUTH: setUser called');
+        } catch (error) {
+            console.error('AUTH getMe FAILED:', error);
+
             removeAccessToken();
             setUser(null);
         }
