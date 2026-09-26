@@ -33,8 +33,8 @@ export class CreateArticleDto {
   status?: ArticleStatus;
 
   @IsUUID()
-  @IsNotEmpty()
-  subjectId: string;
+  @IsOptional()
+  subjectId?: string;
 
   @IsUUID()
   @IsOptional()

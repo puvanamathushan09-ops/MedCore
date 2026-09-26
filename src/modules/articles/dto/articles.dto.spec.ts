@@ -29,7 +29,6 @@ describe('Articles DTO Validation', () => {
 
       expect(errorProperties).toContain('title');
       expect(errorProperties).toContain('content');
-      expect(errorProperties).toContain('subjectId');
     });
 
     it('should fail validation when subjectId is not a valid UUID', async () => {

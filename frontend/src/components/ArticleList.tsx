@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ArticlesApiClient } from '../../../src/client/api/articles.api';
-import { SubjectsApiClient } from '../../../src/client/api/subjects.api';
-import { TopicsApiClient } from '../../../src/client/api/topics.api';
 import type { Article } from '../../../src/client/types/article.types';
-import type { Subject } from '../../../src/client/types/subject.types';
-import type { Topic } from '../../../src/client/types/topic.types';
 import { ArticleCard } from './ArticleCard';
 import { ArticleFilter } from './ArticleFilter';
 import { buildQueryArticleParams } from './article-utils';
@@ -21,65 +17,18 @@ export const ArticleList: React.FC<ArticleListProps> = ({ onArticleClick }) => {
 
   // Filters state
   const [search, setSearch] = useState<string>('');
-  const [subjectId, setSubjectId] = useState<string>('');
-  const [topicId, setTopicId] = useState<string>('');
-
-  // Dropdowns data state
-  const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [topics, setTopics] = useState<Topic[]>([]);
-  const [loadingSubjects, setLoadingSubjects] = useState<boolean>(false);
-  const [loadingTopics, setLoadingTopics] = useState<boolean>(false);
 
   // Pagination state
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalCount, setTotalCount] = useState<number>(0);
 
-  // Load Subjects on mount
-  useEffect(() => {
-    setLoadingSubjects(true);
-    SubjectsApiClient.getSubjects({ limit: 100 })
-      .then((res) => {
-        setSubjects(res.data || []);
-      })
-      .catch((err) => {
-        console.error('Failed to fetch subjects:', err);
-      })
-      .finally(() => {
-        setLoadingSubjects(false);
-      });
-  }, []);
-
-  // Fetch topics whenever subjectId changes
-  useEffect(() => {
-    setTopicId('');
-    setPage(1);
-
-    if (!subjectId) {
-      setTopics([]);
-      return;
-    }
-
-    setLoadingTopics(true);
-    TopicsApiClient.getTopics({ subjectId, limit: 100 })
-      .then((res) => {
-        setTopics(res.data || []);
-      })
-      .catch((err) => {
-        console.error('Failed to fetch topics:', err);
-        setTopics([]);
-      })
-      .finally(() => {
-        setLoadingTopics(false);
-      });
-  }, [subjectId]);
-
   const fetchArticles = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const params = buildQueryArticleParams(search, subjectId, topicId, page, 12);
+      const params = buildQueryArticleParams(search, '', '', page, 12);
       const response = await ArticlesApiClient.getArticles(params);
       setArticles(response.data || []);
       setTotalPages(response.meta?.totalPages || 1);
@@ -91,7 +40,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({ onArticleClick }) => {
     } finally {
       setLoading(false);
     }
-  }, [search, subjectId, topicId, page]);
+  }, [search, page]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -103,10 +52,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({ onArticleClick }) => {
 
   const handleResetFilters = () => {
     setSearch('');
-    setSubjectId('');
-    setTopicId('');
     setPage(1);
-    setTopics([]);
   };
 
   const handleCardClick = (article: Article) => {
@@ -127,15 +73,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({ onArticleClick }) => {
 
       <ArticleFilter
         search={search}
-        subjectId={subjectId}
-        topicId={topicId}
-        subjects={subjects}
-        topics={topics}
-        loadingSubjects={loadingSubjects}
-        loadingTopics={loadingTopics}
         onSearchChange={setSearch}
-        onSubjectIdChange={setSubjectId}
-        onTopicIdChange={setTopicId}
         onResetFilters={handleResetFilters}
       />
 
@@ -220,11 +158,11 @@ export const ArticleList: React.FC<ArticleListProps> = ({ onArticleClick }) => {
           </div>
           <h3 className="empty-title">No Articles Found</h3>
           <p className="empty-message">
-            {search || subjectId || topicId
-              ? 'No articles matched your search and filter criteria. Try resetting your filters.'
+            {search
+              ? 'No articles matched your search criteria. Try clearing the search.'
               : 'There are currently no published articles available.'}
           </p>
-          {search || subjectId || topicId ? (
+          {search ? (
             <button
               type="button"
               className="btn btn-secondary reset-btn"

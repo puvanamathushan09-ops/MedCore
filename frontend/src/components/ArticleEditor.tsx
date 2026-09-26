@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArticlesApiClient } from '../../../src/client/api/articles.api';
-import { SubjectsApiClient } from '../../../src/client/api/subjects.api';
-import { TopicsApiClient } from '../../../src/client/api/topics.api';
 import { getAccessToken } from '../auth/auth-storage';
-import type { Subject } from '../../../src/client/types/subject.types';
-import type { Topic } from '../../../src/client/types/topic.types';
 import type { ArticleStatus } from '../../../src/client/types/article.types';
 import './ArticleEditor.css';
 
@@ -22,52 +18,14 @@ export const ArticleEditor: React.FC<ArticleEditorProps> = ({
   const isEditMode = Boolean(articleId);
 
   const [title, setTitle] = useState('');
-  const [subjectId, setSubjectId] = useState('');
-  const [topicId, setTopicId] = useState('');
   const [summary, setSummary] = useState('');
   const [content, setContent] = useState('');
   const [featuredImageUrl, setFeaturedImageUrl] = useState('');
   const [status, setStatus] = useState<ArticleStatus>('DRAFT');
 
-  const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [topics, setTopics] = useState<Topic[]>([]);
-
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Load available subjects
-  useEffect(() => {
-    async function fetchSubjects() {
-      try {
-        const response = await SubjectsApiClient.getSubjects({ limit: 100 });
-        setSubjects(response.data || []);
-      } catch {
-        setError('Failed to load subjects for selection.');
-      }
-    }
-    fetchSubjects();
-  }, []);
-
-  // Load topics when subjectId changes
-  useEffect(() => {
-    if (!subjectId) {
-      setTopics([]);
-      setTopicId('');
-      return;
-    }
-
-    async function fetchTopics() {
-      try {
-        const response = await TopicsApiClient.getTopics({ subjectId, limit: 100 });
-        setTopics(response.data || []);
-      } catch {
-        setTopics([]);
-      }
-    }
-
-    fetchTopics();
-  }, [subjectId]);
 
   // If in edit mode, fetch article details
   useEffect(() => {
@@ -80,8 +38,6 @@ export const ArticleEditor: React.FC<ArticleEditorProps> = ({
       try {
         const article = await ArticlesApiClient.getArticleById(articleId!, token);
         setTitle(article.title || '');
-        setSubjectId(article.subjectId || '');
-        setTopicId(article.topicId || '');
         setSummary(article.summary || '');
         setContent(article.content || '');
         setFeaturedImageUrl(article.featuredImageUrl || '');
@@ -101,11 +57,6 @@ export const ArticleEditor: React.FC<ArticleEditorProps> = ({
 
     if (!title.trim()) {
       setError('Article Title is required.');
-      return;
-    }
-
-    if (!subjectId) {
-      setError('Please select a Subject for this article.');
       return;
     }
 
@@ -129,8 +80,6 @@ export const ArticleEditor: React.FC<ArticleEditorProps> = ({
           articleId,
           {
             title: title.trim(),
-            subjectId,
-            topicId: topicId || undefined,
             summary: summary.trim() || undefined,
             content: content.trim(),
             featuredImageUrl: featuredImageUrl.trim() || undefined,
@@ -142,8 +91,6 @@ export const ArticleEditor: React.FC<ArticleEditorProps> = ({
         await ArticlesApiClient.createArticle(
           {
             title: title.trim(),
-            subjectId,
-            topicId: topicId || undefined,
             summary: summary.trim() || undefined,
             content: content.trim(),
             featuredImageUrl: featuredImageUrl.trim() || undefined,
@@ -212,44 +159,6 @@ export const ArticleEditor: React.FC<ArticleEditorProps> = ({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-        </div>
-
-        {/* SUBJECT & TOPIC ROW */}
-        <div className="form-group-row">
-          <div className="form-field">
-            <label className="field-label">
-              Medical Subject <span className="field-required">*</span>
-            </label>
-            <select
-              className="field-select"
-              value={subjectId}
-              onChange={(e) => setSubjectId(e.target.value)}
-            >
-              <option value="">-- Select Subject --</option>
-              {subjects.map((sub) => (
-                <option key={sub.id} value={sub.id}>
-                  {sub.title}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-field">
-            <label className="field-label">Clinical Topic (Optional)</label>
-            <select
-              className="field-select"
-              value={topicId}
-              onChange={(e) => setTopicId(e.target.value)}
-              disabled={!subjectId || topics.length === 0}
-            >
-              <option value="">-- Select Topic --</option>
-              {topics.map((top) => (
-                <option key={top.id} value={top.id}>
-                  {top.title}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
 
         {/* SUMMARY */}

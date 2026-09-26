@@ -136,6 +136,37 @@ describe('ArticlesService', () => {
       expect(result).toEqual(mockArticle);
     });
 
+    it('should create an article successfully without subject or topic', async () => {
+      (prismaService.user.findUnique as jest.Mock).mockResolvedValue(mockUser);
+      (prismaService.article.findUnique as jest.Mock).mockResolvedValue(null);
+      (prismaService.article.create as jest.Mock).mockResolvedValue({
+        ...mockArticle,
+        subjectId: null,
+        topicId: null,
+        subject: null,
+        topic: null,
+      });
+
+      const dto = {
+        title: 'Understanding Hypertension',
+        content: 'Original medical education content.',
+      };
+
+      const result = await service.create(dto, mockUser.id);
+
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { id: mockUser.id },
+      });
+
+      expect(prismaService.subject.findUnique).not.toHaveBeenCalled();
+      expect(prismaService.topic.findUnique).not.toHaveBeenCalled();
+
+      expect(prismaService.article.create).toHaveBeenCalled();
+
+      expect(result.subjectId).toBeNull();
+      expect(result.topicId).toBeNull();
+    });
+
     it('should throw BadRequestException if author does not exist', async () => {
       (prismaService.user.findUnique as jest.Mock).mockResolvedValue(null);
 

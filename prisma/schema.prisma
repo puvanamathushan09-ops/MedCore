@@ -103,14 +103,14 @@ model Article {
   summary          String?
   status           ArticleStatus @default(DRAFT)
   authorId         String        @map("author_id") @db.Uuid
-  subjectId        String        @map("subject_id") @db.Uuid
+  subjectId        String?       @map("subject_id") @db.Uuid
   topicId          String?       @map("topic_id") @db.Uuid
   publishedAt      DateTime?     @map("published_at")
   createdAt        DateTime      @default(now()) @map("created_at")
   updatedAt        DateTime      @updatedAt @map("updated_at")
   featuredImageUrl String?       @map("featured_image_url")
   author           User          @relation("UserArticles", fields: [authorId], references: [id])
-  subject          Subject       @relation("SubjectArticles", fields: [subjectId], references: [id])
+  subject          Subject?      @relation("SubjectArticles", fields: [subjectId], references: [id])
   topic            Topic?        @relation("TopicArticles", fields: [topicId], references: [id])
 
   @@index([authorId])

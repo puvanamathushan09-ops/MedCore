@@ -57,7 +57,7 @@ export interface CreateArticleInput {
   summary?: string;
   featuredImageUrl?: string;
   status?: ArticleStatus;
-  subjectId: string;
+  subjectId?: string;
   topicId?: string;
 }
 

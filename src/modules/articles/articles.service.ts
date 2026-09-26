@@ -33,12 +33,15 @@ export class ArticlesService {
       throw new BadRequestException(`Author with ID '${authorId}' not found`);
     }
 
-    // Verify Subject exists
-    const subject = await this.prisma.subject.findUnique({
-      where: { id: subjectId },
-    });
-    if (!subject) {
-      throw new BadRequestException(`Subject with ID '${subjectId}' not found`);
+    // Verify Subject exists if provided
+    if (subjectId) {
+      const subject = await this.prisma.subject.findUnique({
+        where: { id: subjectId },
+      });
+
+      if (!subject) {
+        throw new BadRequestException(`Subject with ID '${subjectId}' not found`);
+      }
     }
 
     // Verify Topic exists if provided
@@ -69,8 +72,8 @@ export class ArticlesService {
         slug,
         status: articleStatus,
         authorId,
-        subjectId,
-        topicId,
+        ...(subjectId ? { subjectId } : {}),
+        ...(topicId ? { topicId } : {}),
         publishedAt,
         ...rest,
       },
