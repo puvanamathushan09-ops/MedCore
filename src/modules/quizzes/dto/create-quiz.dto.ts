@@ -10,6 +10,7 @@ import {
   MinLength,
   ValidateNested,
   ArrayMinSize,
+  ArrayMaxSize,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -44,7 +45,8 @@ export class CreateQuizQuestionDto {
   orderIndex?: number;
 
   @IsArray()
-  @ArrayMinSize(2)
+  @ArrayMinSize(4)
+  @ArrayMaxSize(5)
   @ValidateNested({ each: true })
   @Type(() => CreateQuizOptionDto)
   options: CreateQuizOptionDto[];
