@@ -16,8 +16,6 @@ describe('ArticlesApiClient', () => {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     authorId: '11111111-1111-1111-1111-111111111111',
-    subjectId: '22222222-2222-2222-2222-222222222222',
-    topicId: '33333333-3333-3333-3333-333333333333',
   };
 
   beforeEach(() => {
@@ -64,7 +62,6 @@ describe('ArticlesApiClient', () => {
       } as any);
 
       const queryParams = {
-        subjectId: '22222222-2222-2222-2222-222222222222',
         status: 'DRAFT' as ArticleStatus,
         search: 'appendicitis',
         page: 2,
@@ -74,7 +71,7 @@ describe('ArticlesApiClient', () => {
       await ArticlesApiClient.getArticles(queryParams, mockToken);
 
       const expectedUrl =
-        'http://localhost:3000/articles?subjectId=22222222-2222-2222-2222-222222222222&status=DRAFT&search=appendicitis&page=2&limit=5';
+        'http://localhost:3000/articles?status=DRAFT&search=appendicitis&page=2&limit=5';
 
       expect(global.fetch).toHaveBeenCalledWith(
         expectedUrl,
@@ -136,7 +133,7 @@ describe('ArticlesApiClient', () => {
       const createInput = {
         title: mockArticle.title,
         content: mockArticle.content,
-        subjectId: mockArticle.subjectId,
+        summary: mockArticle.summary,
       };
 
       const result = await ArticlesApiClient.createArticle(createInput, mockToken);
@@ -220,7 +217,7 @@ describe('ArticlesApiClient', () => {
         timestamp: new Date().toISOString(),
         path: '/articles',
         error: {
-          message: ['title must be longer than 0 characters', 'subjectId must be a UUID'],
+          message: ['title must be longer than 0 characters'],
           error: 'Bad Request',
         },
       };
@@ -233,12 +230,12 @@ describe('ArticlesApiClient', () => {
       } as any);
 
       await expect(
-        ArticlesApiClient.createArticle({ title: '', content: 'x', subjectId: 'bad' }, mockToken),
+        ArticlesApiClient.createArticle({ title: '', content: 'x' }, mockToken),
       ).rejects.toThrow(ApiClientError);
 
       try {
         await ArticlesApiClient.createArticle(
-          { title: '', content: 'x', subjectId: 'bad' },
+          { title: '', content: 'x' },
           mockToken,
         );
       } catch (err: any) {
@@ -246,7 +243,6 @@ describe('ArticlesApiClient', () => {
         expect(err.statusCode).toBe(400);
         expect(err.errors).toEqual([
           'title must be longer than 0 characters',
-          'subjectId must be a UUID',
         ]);
       }
     });

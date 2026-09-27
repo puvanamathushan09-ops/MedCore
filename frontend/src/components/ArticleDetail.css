@@ -23,12 +23,6 @@
   margin-bottom: 32px;
 }
 
-.article-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
 
 .article-title {
   font-size: 38px;
@@ -156,18 +150,6 @@
   margin-top: 20px;
 }
 
-.skeleton-badge-group {
-  display: flex;
-  gap: 8px;
-}
-
-.skeleton-pill {
-  width: 80px;
-  height: 24px;
-  border-radius: 4px;
-  background: var(--code-bg);
-  animation: skeleton-pulse 1.5s infinite ease-in-out;
-}
 
 .skeleton-main-title {
   width: 95%;

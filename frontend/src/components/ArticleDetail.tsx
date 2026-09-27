@@ -81,10 +81,6 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({ slug, onBack }) =>
       {/* LOADING STATE */}
       {loading ? (
         <div className="article-detail-skeleton" data-testid="detail-loading-state">
-          <div className="skeleton-badge-group">
-            <div className="skeleton-pill" />
-            <div className="skeleton-pill" />
-          </div>
           <div className="skeleton-main-title" />
           <div className="skeleton-meta-row" />
           <div className="skeleton-hero-image" />
@@ -151,15 +147,6 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({ slug, onBack }) =>
         <div className="article-detail-content" data-testid="article-detail-body">
           {/* Header Metadata */}
           <header className="article-header">
-            <div className="article-badges">
-              {article.subject ? (
-                <span className="badge subject-badge">{article.subject.title}</span>
-              ) : null}
-              {article.topic ? (
-                <span className="badge topic-badge">{article.topic.title}</span>
-              ) : null}
-            </div>
-
             <h1 className="article-title">{article.title}</h1>
 
             <div className="article-author-card">

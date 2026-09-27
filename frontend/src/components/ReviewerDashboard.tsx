@@ -259,7 +259,6 @@ export const ReviewerDashboard: React.FC<ReviewerDashboardProps> = ({
                   <thead>
                     <tr>
                       <th>Article Title & Summary</th>
-                      <th>Subject / Topic</th>
                       <th>Status</th>
                       <th>Last Updated</th>
                       <th>Actions</th>
@@ -273,16 +272,6 @@ export const ReviewerDashboard: React.FC<ReviewerDashboardProps> = ({
                           <div className="article-row-summary">
                             {article.summary || 'No summary provided.'}
                           </div>
-                        </td>
-                        <td>
-                          <div style={{ fontWeight: 600, color: 'var(--text-h)' }}>
-                            {article.subject?.title || 'Unassigned Subject'}
-                          </div>
-                          {article.topic?.title ? (
-                            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                              {article.topic.title}
-                            </div>
-                          ) : null}
                         </td>
                         <td>
                           <span

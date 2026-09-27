@@ -18,26 +18,25 @@ describe('ArticleList UI Logic & Formatting Unit Tests', () => {
     createdAt: '2026-05-10T10:00:00.000Z',
     updatedAt: '2026-05-15T10:00:00.000Z',
     authorId: 'auth-1',
-    subjectId: 'sub-cardiology',
-    topicId: 'top-arrhythmia',
     author: {
       id: 'auth-1',
       email: 'dr.smith@medcore.org',
       firstName: 'Sarah',
       lastName: 'Smith',
     },
-    subject: {
-      id: 'sub-cardiology',
-      title: 'Cardiology',
-      slug: 'cardiology',
-    },
-    topic: {
-      id: 'top-arrhythmia',
-      subjectId: 'sub-cardiology',
-      title: 'Arrhythmias',
-      slug: 'arrhythmias',
-    },
   };
+
+  describe('Article rendering without Subject/Topic', () => {
+    it('should hold core article properties independently without subject or topic references', () => {
+      expect(sampleArticle.id).toBe('art-100');
+      expect(sampleArticle.title).toBe('Clinical Assessment of Cardiac Arrhythmia');
+      expect(sampleArticle.summary).toBe('Comprehensive overview of diagnosing and managing cardiac arrhythmias.');
+      expect((sampleArticle as any).subject).toBeUndefined();
+      expect((sampleArticle as any).topic).toBeUndefined();
+      expect((sampleArticle as any).subjectId).toBeUndefined();
+      expect((sampleArticle as any).topicId).toBeUndefined();
+    });
+  });
 
   describe('formatDate', () => {
     it('should format ISO date strings into readable month, day, year format', () => {
@@ -85,33 +84,32 @@ describe('ArticleList UI Logic & Formatting Unit Tests', () => {
   });
 
   describe('buildQueryArticleParams', () => {
-    it('should construct valid QueryArticleParams with search and subjectId filters', () => {
+    it('should construct valid QueryArticleParams with search, page, and limit', () => {
       const search = 'cardiac';
-      const subjectId = 'sub-cardiology';
-      const topicId = 'top-arrhythmia';
+      const page = 1;
+      const limit = 12;
 
-      const params = buildQueryArticleParams(search, subjectId, topicId, 1, 12);
+      const params = buildQueryArticleParams(search, page, limit);
 
       expect(params).toEqual({
         page: 1,
         limit: 12,
         search: 'cardiac',
-        subjectId: 'sub-cardiology',
-        topicId: 'top-arrhythmia',
       });
     });
 
-    it('should exclude empty strings or whitespace-only search and filter values', () => {
+    it('should exclude search parameter when search is empty or whitespace-only', () => {
       const search = '   ';
-      const subjectId = '';
-      const topicId = '  ';
+      const page = 2;
+      const limit = 10;
 
-      const params = buildQueryArticleParams(search, subjectId, topicId, 1, 12);
+      const params = buildQueryArticleParams(search, page, limit);
 
       expect(params).toEqual({
-        page: 1,
-        limit: 12,
+        page: 2,
+        limit: 10,
       });
+      expect(params.search).toBeUndefined();
     });
   });
 });

@@ -9,29 +9,6 @@ export interface AuthorSummary {
   avatarUrl?: string | null;
 }
 
-export interface SubjectSummary {
-  id: string;
-  title: string;
-  slug: string;
-  description?: string | null;
-  iconUrl?: string | null;
-  orderIndex?: number;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
-}
-
-export interface TopicSummary {
-  id: string;
-  subjectId: string;
-  parentId?: string | null;
-  title: string;
-  slug: string;
-  description?: string | null;
-  orderIndex?: number;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
-}
-
 export interface Article {
   id: string;
   title: string;
@@ -44,11 +21,7 @@ export interface Article {
   createdAt: string | Date;
   updatedAt: string | Date;
   authorId: string;
-  subjectId: string;
-  topicId?: string | null;
   author?: AuthorSummary;
-  subject?: SubjectSummary;
-  topic?: TopicSummary | null;
 }
 
 export interface CreateArticleInput {
@@ -57,8 +30,6 @@ export interface CreateArticleInput {
   summary?: string;
   featuredImageUrl?: string;
   status?: ArticleStatus;
-  subjectId?: string;
-  topicId?: string;
 }
 
 export interface UpdateArticleInput {
@@ -67,13 +38,9 @@ export interface UpdateArticleInput {
   summary?: string;
   featuredImageUrl?: string;
   status?: ArticleStatus;
-  subjectId?: string;
-  topicId?: string;
 }
 
 export interface QueryArticleParams {
-  subjectId?: string;
-  topicId?: string;
   status?: ArticleStatus;
   search?: string;
   page?: number;

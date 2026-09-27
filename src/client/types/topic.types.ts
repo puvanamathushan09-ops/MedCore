@@ -1,4 +1,4 @@
-import type { SubjectSummary } from './article.types';
+import type { SubjectSummary } from './subject.types';
 
 export interface TopicCountSummary {
   articles?: number;

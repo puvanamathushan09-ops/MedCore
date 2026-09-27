@@ -21,9 +21,7 @@ export const getAuthorDisplayName = (article: Article): string => {
 };
 
 export const buildQueryArticleParams = (
-  search: string,
-  subjectId: string,
-  topicId: string,
+  search: string = '',
   page: number = 1,
   limit: number = 12,
 ): QueryArticleParams => {
@@ -34,12 +32,6 @@ export const buildQueryArticleParams = (
 
   if (search.trim()) {
     params.search = search.trim();
-  }
-  if (subjectId.trim()) {
-    params.subjectId = subjectId.trim();
-  }
-  if (topicId.trim()) {
-    params.topicId = topicId.trim();
   }
 
   return params;
@@ -61,5 +53,3 @@ export const getSlugFromUrl = (pathname?: string): string | null => {
   }
   return null;
 };
-
-

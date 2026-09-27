@@ -45,15 +45,6 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ article, onArticleClic
       ) : null}
 
       <div className="card-content">
-        <div className="card-badges">
-          {article.subject ? (
-            <span className="badge subject-badge">{article.subject.title}</span>
-          ) : null}
-          {article.topic ? (
-            <span className="badge topic-badge">{article.topic.title}</span>
-          ) : null}
-        </div>
-
         <h3 className="card-title">{article.title}</h3>
 
         {article.summary ? <p className="card-summary">{article.summary}</p> : null}

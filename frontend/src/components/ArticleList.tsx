@@ -28,7 +28,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({ onArticleClick }) => {
     setError(null);
 
     try {
-      const params = buildQueryArticleParams(search, '', '', page, 12);
+      const params = buildQueryArticleParams(search, page, 12);
       const response = await ArticlesApiClient.getArticles(params);
       setArticles(response.data || []);
       setTotalPages(response.meta?.totalPages || 1);

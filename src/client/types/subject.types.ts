@@ -1,3 +1,14 @@
+export interface SubjectSummary {
+  id: string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  iconUrl?: string | null;
+  orderIndex?: number;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+}
+
 export interface SubjectCountSummary {
   topics?: number;
   articles?: number;

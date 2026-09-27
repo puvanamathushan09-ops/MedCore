@@ -21,25 +21,12 @@ describe('ArticleDetail UI Logic & Data Unit Tests', () => {
     createdAt: '2026-05-25T12:00:00.000Z',
     updatedAt: '2026-06-01T12:00:00.000Z',
     authorId: '11111111-1111-1111-1111-111111111111',
-    subjectId: '22222222-2222-2222-2222-222222222222',
-    topicId: '33333333-3333-3333-3333-333333333333',
     author: {
       id: '11111111-1111-1111-1111-111111111111',
       email: 'dr.johnson@medcore.org',
       firstName: 'Robert',
       lastName: 'Johnson',
       avatarUrl: 'https://example.com/avatar.jpg',
-    },
-    subject: {
-      id: '22222222-2222-2222-2222-222222222222',
-      title: 'Gastroenterology',
-      slug: 'gastroenterology',
-    },
-    topic: {
-      id: '33333333-3333-3333-3333-333333333333',
-      subjectId: '22222222-2222-2222-2222-222222222222',
-      title: 'Acute Abdomen',
-      slug: 'acute-abdomen',
     },
   };
 
@@ -63,6 +50,9 @@ describe('ArticleDetail UI Logic & Data Unit Tests', () => {
       );
       expect(result).toEqual(mockArticle);
       expect(result.title).toBe('Understanding Appendicitis');
+      expect(result.summary).toBe('Clinical summary of acute appendicitis diagnosis and surgical intervention.');
+      expect(result.featuredImageUrl).toBe('https://example.com/appendicitis.png');
+      expect(result.content).toContain('Paragraph 1');
       expect(result.author?.firstName).toBe('Robert');
     });
 
@@ -123,11 +113,6 @@ describe('ArticleDetail UI Logic & Data Unit Tests', () => {
       const formatted = formatDate(mockArticle.publishedAt);
       expect(formatted).toContain('2026');
       expect(formatted).toContain('Jun');
-    });
-
-    it('should preserve subject and topic metadata titles', () => {
-      expect(mockArticle.subject?.title).toBe('Gastroenterology');
-      expect(mockArticle.topic?.title).toBe('Acute Abdomen');
     });
   });
 
