@@ -127,7 +127,6 @@ export const ArticleList: React.FC<ArticleListProps> = ({ onArticleClick }) => {
             <div key={index} className="skeleton-card">
               <div className="skeleton-image" />
               <div className="skeleton-body">
-                <div className="skeleton-badge" />
                 <div className="skeleton-title" />
                 <div className="skeleton-text" />
                 <div className="skeleton-text short" />
