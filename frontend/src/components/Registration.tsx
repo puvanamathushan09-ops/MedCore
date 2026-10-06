@@ -130,16 +130,94 @@ export const Registration: React.FC<RegistrationProps> = ({
   };
 
   return (
-    <div className="medcore-registration-container">
-      <div className="registration-card">
-        {/* BRAND HEADER */}
-        <div className="registration-brand-header">
-          <div
-            className="registration-logo-wrapper"
-            onClick={onNavigateHome}
-            role="button"
-            tabIndex={0}
-          >
+    <div className="medcore-registration-page-wrapper">
+      <div className="medcore-registration-split-card">
+        {/* LEFT PANEL: MEDICAL VISUAL SHOWCASE */}
+        <div
+          className="registration-visual-panel"
+          style={{ backgroundImage: "url('/images/medical-hero-3.jpg')" }}
+        >
+          <div className="registration-visual-scrim" />
+          <div className="registration-visual-content">
+            <div className="registration-visual-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 8v4l3 3" />
+              </svg>
+              <span>Global Medical Network</span>
+            </div>
+
+            <h2 className="registration-visual-title">
+              Join 50,000+ Healthcare Leaders &amp; Scholars.
+            </h2>
+            <p className="registration-visual-desc">
+              Whether you are preparing for USMLE board examinations or verifying surgical protocols as a credentialed reviewer, MedCore supports your clinical journey.
+            </p>
+
+            <div className="registration-visual-features">
+              <div className="reg-feature-item">
+                <span className="reg-feature-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <div>
+                  <strong>Zero-Paywall Medical Education</strong>
+                  <span>Always free, open-access for every healthcare worker</span>
+                </div>
+              </div>
+              <div className="reg-feature-item">
+                <span className="reg-feature-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <div>
+                  <strong>Verified Reviewer Accreditation</strong>
+                  <span>Contribute peer reviews to high-yield clinical literature</span>
+                </div>
+              </div>
+              <div className="reg-feature-item">
+                <span className="reg-feature-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <div>
+                  <strong>Interactive Case Quizzes</strong>
+                  <span>Test diagnostic acumen with instant evidence rationales</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="reg-stat-pill-row">
+              <div className="reg-stat-card">
+                <strong>100%</strong>
+                <span>Peer-Reviewed</span>
+              </div>
+              <div className="reg-stat-card">
+                <strong>500+</strong>
+                <span>Clinical Guides</span>
+              </div>
+              <div className="reg-stat-card">
+                <strong>50k+</strong>
+                <span>Active Learners</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT PANEL: FORM */}
+        <div className="registration-form-panel">
+          {/* BRAND HEADER */}
+          <div className="registration-brand-header">
+            <div
+              className="registration-logo-wrapper"
+              onClick={onNavigateHome}
+              role="button"
+              tabIndex={0}
+              title="Return to MedCore Home"
+            >
             <svg
               className="registration-brand-icon"
               viewBox="0 0 24 24"
@@ -489,5 +567,6 @@ export const Registration: React.FC<RegistrationProps> = ({
         </div>
       </div>
     </div>
+  </div>
   );
 };

@@ -1,4 +1,7 @@
 export type RouteState =
+  | { type: 'home' }
+  | { type: 'about' }
+  | { type: 'contact' }
   | { type: 'dashboard' }
   | { type: 'reviewer-dashboard' }
   | { type: 'apply-reviewer' }
@@ -18,6 +21,21 @@ export type RouteState =
 
 export function parseRoute(pathname?: string): RouteState {
   const path = pathname ?? (typeof window !== 'undefined' ? window.location.pathname : '/');
+
+  // Home route: / or /home
+  if (path === '/' || path === '/home' || path === '/home/') {
+    return { type: 'home' };
+  }
+
+  // About route: /about
+  if (path === '/about' || path === '/about/') {
+    return { type: 'about' };
+  }
+
+  // Contact route: /contact
+  if (path === '/contact' || path === '/contact/') {
+    return { type: 'contact' };
+  }
 
   // Login route: /login
   if (path === '/login' || path === '/login/') {
@@ -63,7 +81,6 @@ export function parseRoute(pathname?: string): RouteState {
     }
   }
 
-
   // Reviewer Dashboard / Admin Portal: /reviewer or /admin
   if (path === '/reviewer' || path === '/reviewer/' || path === '/admin' || path === '/admin/') {
     return { type: 'reviewer-dashboard' };
@@ -89,6 +106,11 @@ export function parseRoute(pathname?: string): RouteState {
     if (slug) {
       return { type: 'article-detail', slug };
     }
+  }
+
+  // Article list: /articles
+  if (path === '/articles' || path === '/articles/') {
+    return { type: 'article-list' };
   }
 
   // Subject detail with topic: /subjects/:subjectSlug/topics/:topicSlug
@@ -120,8 +142,8 @@ export function parseRoute(pathname?: string): RouteState {
     return { type: 'topic-list' };
   }
 
-  // Default: Article list (/ or /articles)
-  return { type: 'article-list' };
+  // Default fallback: Home
+  return { type: 'home' };
 }
 
 export function pushRoute(url: string): void {

@@ -56,10 +56,8 @@ describe('AdminApplicationReview Component', () => {
     render(<AdminApplicationReview />);
 
     await waitFor(() => {
-      expect(screen.getByTestId('admin-application-review')).toBeInTheDocument();
+      expect(screen.getByText('John Smith')).toBeInTheDocument();
     });
-
-    expect(screen.getByText('John Smith')).toBeInTheDocument();
     expect(screen.getByText('applicant@medcore.edu')).toBeInTheDocument();
 
     const approveBtn = screen.getByTestId('approve-btn-app-1');

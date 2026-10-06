@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
+import { Home } from './components/Home';
+import { About } from './components/About';
+import { Contact } from './components/Contact';
 import { Dashboard } from './components/Dashboard';
 import { ReviewerDashboard } from './components/ReviewerDashboard';
 import { ArticleEditor } from './components/ArticleEditor';
@@ -29,6 +32,14 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const currentRole: UserRole = user?.role || 'STUDENT';
 
+  const isWorkspaceRoute =
+    route.type === 'dashboard' ||
+    route.type === 'reviewer-dashboard' ||
+    route.type === 'create-article' ||
+    route.type === 'edit-article' ||
+    route.type === 'apply-reviewer' ||
+    route.type === 'profile';
+
   useEffect(() => {
     const handlePopState = () => {
       setRoute(parseRoute());
@@ -37,6 +48,21 @@ function App() {
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  const navigateToHome = () => {
+    setRoute({ type: 'home' });
+    pushRoute('/');
+  };
+
+  const navigateToAbout = () => {
+    setRoute({ type: 'about' });
+    pushRoute('/about');
+  };
+
+  const navigateToContact = () => {
+    setRoute({ type: 'contact' });
+    pushRoute('/contact');
+  };
 
   const navigateToLogin = () => {
     setRoute({ type: 'login' });
@@ -134,7 +160,7 @@ function App() {
 
   const navigateToArticles = () => {
     setRoute({ type: 'article-list' });
-    pushRoute('/');
+    pushRoute('/articles');
   };
 
   const navigateToArticleDetail = (article: Article) => {
@@ -184,6 +210,19 @@ function App() {
     pushRoute(`/quizzes/${quizId}`);
   };
 
+  const handleSwitchToWorkspace = () => {
+    if (!user) {
+      navigateToLogin();
+    } else if (user.role === 'ADMIN') {
+      setRoute({ type: 'reviewer-dashboard' });
+      pushRoute('/admin');
+    } else if (user.role === 'MEDICAL_REVIEWER') {
+      navigateToReviewerDashboard();
+    } else {
+      navigateToDashboard();
+    }
+  };
+
   const handleSidebarNavigate = (
     type: 'dashboard' | 'reviewer-dashboard' | 'apply-reviewer' | 'article-list' | 'subject-list' | 'topic-list' | 'quiz-list',
   ) => {
@@ -218,35 +257,68 @@ function App() {
       <Header
         onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
         isSidebarOpen={isSidebarOpen}
-        onNavigateHome={navigateToDashboard}
+        onNavigateHome={navigateToHome}
         onNavigateToLogin={navigateToLogin}
         onNavigateToProfile={navigateToProfile}
+        onNavigateToArticles={navigateToArticles}
+        onNavigateToSubjects={navigateToSubjects}
+        onNavigateToQuizzes={navigateToQuizzes}
+        onNavigateToAbout={navigateToAbout}
+        onNavigateToContact={navigateToContact}
+        onSwitchToWorkspace={handleSwitchToWorkspace}
+        isWorkspaceView={isWorkspaceRoute}
+        activeRouteType={route.type}
         currentRole={currentRole}
       />
 
       {/* MAIN SHELL BODY */}
-      <div className="medcore-shell-body">
-        {/* SIDEBAR NAVIGATION */}
-        <Sidebar
-          activeRoute={route}
-          onNavigate={handleSidebarNavigate}
-          isOpen={isSidebarOpen}
-          onCloseMobile={() => setIsSidebarOpen(false)}
-          currentRole={currentRole}
-        />
+      <div className={`medcore-shell-body ${isWorkspaceRoute ? 'with-sidebar' : 'public-layout'}`}>
+        {/* SIDEBAR NAVIGATION (Rendered only on administrative/reviewer workspace routes) */}
+        {isWorkspaceRoute ? (
+          <Sidebar
+            activeRoute={route}
+            onNavigate={handleSidebarNavigate}
+            isOpen={isSidebarOpen}
+            onCloseMobile={() => setIsSidebarOpen(false)}
+            currentRole={currentRole}
+          />
+        ) : null}
 
         {/* MAIN CONTENT AREA */}
-        <main className="medcore-main">
-          {route.type === 'login' ? (
+        <main className={`medcore-main ${isWorkspaceRoute ? 'workspace-content' : 'public-content'}`}>
+          {route.type === 'home' ? (
+            <Home
+              onNavigateToArticles={navigateToArticles}
+              onNavigateToArticleDetail={navigateToArticleDetail}
+              onNavigateToSubjects={navigateToSubjects}
+              onNavigateToSubjectDetail={navigateToSubjectDetail}
+              onNavigateToQuizzes={navigateToQuizzes}
+              onNavigateToAbout={navigateToAbout}
+              onNavigateToContact={navigateToContact}
+              onSearchSubmit={() => navigateToArticles()}
+            />
+          ) : route.type === 'about' ? (
+            <About
+              onNavigateHome={navigateToHome}
+              onNavigateToArticles={navigateToArticles}
+              onNavigateToContact={navigateToContact}
+              onNavigateToApplyReviewer={navigateToApplyReviewer}
+            />
+          ) : route.type === 'contact' ? (
+            <Contact
+              onNavigateHome={navigateToHome}
+              onNavigateToArticles={navigateToArticles}
+            />
+          ) : route.type === 'login' ? (
             <Login
               onLoginSuccess={handleLoginSuccess}
-              onNavigateHome={navigateToDashboard}
+              onNavigateHome={navigateToHome}
               onNavigateToRegister={navigateToRegister}
             />
           ) : route.type === 'register' ? (
             <Registration
               onNavigateToLogin={navigateToLogin}
-              onNavigateHome={navigateToDashboard}
+              onNavigateHome={navigateToHome}
             />
           ) : route.type === 'apply-reviewer' ? (
             <ReviewerApplication
@@ -300,15 +372,48 @@ function App() {
           ) : route.type === 'quiz-detail' ? (
             <QuizDetail quizId={route.quizId} onBackToQuizzes={navigateToQuizzes} />
           ) : (
-            <ArticleList onArticleClick={navigateToArticleDetail} />
+            <ArticleList
+              onArticleClick={navigateToArticleDetail}
+              onSelectSubject={(subjectSlug) => {
+                navigateToSubjects();
+                console.log('Selected subject:', subjectSlug);
+              }}
+            />
           )}
 
-          {/* FOOTER */}
-          <footer className="medcore-footer">
-            <div className="footer-container">
-              <p>&copy; {new Date().getFullYear()} MedCore Medical Platform. Peer-reviewed clinical & medical learning.</p>
-            </div>
-          </footer>
+          {/* FOOTER (Shown on secondary pages, Home has its own comprehensive Pomaii footer) */}
+          {route.type !== 'home' ? (
+            <footer className="medcore-footer">
+              <div className="footer-container">
+                <div className="footer-brand" onClick={navigateToHome} style={{ cursor: 'pointer' }}>
+                  <div className="footer-mini-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                  </div>
+                  <span>MedCore Clinical Platform</span>
+                </div>
+                <div className="footer-links">
+                  <button type="button" onClick={navigateToHome}>Home</button>
+                  <span>·</span>
+                  <button type="button" onClick={navigateToArticles}>Articles</button>
+                  <span>·</span>
+                  <button type="button" onClick={navigateToSubjects}>Specialties</button>
+                  <span>·</span>
+                  <button type="button" onClick={navigateToQuizzes}>Quizzes</button>
+                  <span>·</span>
+                  <button type="button" onClick={navigateToAbout}>About Us</button>
+                  <span>·</span>
+                  <button type="button" onClick={navigateToContact}>Contact</button>
+                  <span>·</span>
+                  <button type="button" onClick={handleSwitchToWorkspace}>Clinical Workspace</button>
+                </div>
+                <p className="footer-copy">
+                  &copy; {new Date().getFullYear()} MedCore Medical Platform. All rights reserved.
+                </p>
+              </div>
+            </footer>
+          ) : null}
         </main>
       </div>
     </div>
@@ -316,4 +421,3 @@ function App() {
 }
 
 export default App;
-

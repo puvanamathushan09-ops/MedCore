@@ -23,9 +23,11 @@ export const ArticleFilter: React.FC<ArticleFilterProps> = ({
         <div className="search-input-wrapper">
           <svg
             className="search-icon"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
+            stroke="#64748b"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -37,7 +39,7 @@ export const ArticleFilter: React.FC<ArticleFilterProps> = ({
             id="article-search"
             type="text"
             className="filter-input search-input"
-            placeholder="Search by title or keyword..."
+            placeholder="Search clinical guides by title or keyword..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
           />

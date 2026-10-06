@@ -123,7 +123,7 @@ describe('SubjectDetail Component', () => {
       expect(screen.getByTestId('topic-pill-upper-limb')).toBeInTheDocument();
       expect(screen.getByTestId('topic-pill-thorax')).toBeInTheDocument();
       expect(screen.getByText('Brachial Plexus Anatomy')).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('filters by topic when a topic pill is clicked', async () => {

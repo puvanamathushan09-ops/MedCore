@@ -1,259 +1,380 @@
-/* MedCore Shell Header Styles */
+/* MedCore Shell Header Styles (Pomaii-Inspired Modern Organic & Clinical) */
 
 .medcore-header {
-  height: 64px;
-  background-color: var(--surface);
-  border-bottom: 1px solid var(--border);
+  height: 76px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #edf0f2;
   position: sticky;
   top: 0;
-  z-index: 90;
-  backdrop-filter: blur(12px);
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03);
   display: flex;
   align-items: center;
+  transition: all 0.25s ease;
 }
 
 .header-container {
   width: 100%;
-  padding: 0 24px;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
 }
 
+/* Left Section: Brand & Sidebar toggle */
 .header-left {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.sidebar-toggle-btn {
+.sidebar-toggle-btn,
+.mobile-nav-toggle-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: #ffffff;
   color: var(--text-h);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.sidebar-toggle-btn:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-light);
+.mobile-nav-toggle-btn {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .mobile-nav-toggle-btn {
+    display: flex;
+  }
+}
+
+.sidebar-toggle-btn:hover,
+.mobile-nav-toggle-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
 }
 
 .brand-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   cursor: pointer;
   user-select: none;
 }
 
 .brand-icon-wrapper {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--primary-500), var(--teal-500));
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f97316 0%, #154734 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.28);
+  transition: transform 0.2s ease;
+}
+
+.brand-logo:hover .brand-icon-wrapper {
+  transform: scale(1.04);
 }
 
 .brand-icon {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+}
+
+.brand-text-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
 }
 
 .brand-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
-  color: var(--text-h);
-  letter-spacing: -0.5px;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  font-family: var(--sans);
 }
 
-.brand-badge {
+.brand-tagline {
   font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--accent-bg);
-  color: var(--accent);
-  border: 1px solid var(--accent-border);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: 0.2px;
+  margin-top: 2px;
 }
 
-.header-center {
-  flex: 1;
-  max-width: 480px;
-}
-
-.header-search-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.header-search-icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: var(--text-muted);
-  pointer-events: none;
-}
-
-.header-search-input {
-  width: 100%;
-  height: 38px;
-  padding: 0 16px 0 40px;
-  font-size: 14px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-h);
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.header-search-input:focus {
-  border-color: var(--accent);
-  background: var(--surface);
-  box-shadow: 0 0 0 3px var(--accent-bg);
-}
-
-.header-right {
+/* Center Section: Navigation Links (matching reference) */
+.header-nav-tabs {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 28px;
 }
 
-.system-status-pill {
+.nav-tab-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
+  padding: 8px 0;
+  font-size: 14.5px;
   font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--teal-50);
-  color: var(--teal-600);
-  border: 1px solid rgba(13, 148, 136, 0.2);
+  color: #475569;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.18s ease;
+  white-space: nowrap;
 }
 
-@media (prefers-color-scheme: dark) {
-  .system-status-pill {
-    background: rgba(13, 148, 136, 0.15);
-    color: #2dd4bf;
-    border-color: rgba(45, 212, 191, 0.3);
+.nav-tab-btn:hover {
+  color: #ea580c;
+}
+
+.nav-tab-btn.active {
+  color: #ea580c;
+  font-weight: 700;
+}
+
+.nav-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: #f97316;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(249, 115, 22, 0.4);
+}
+
+@media (max-width: 1024px) {
+  .header-nav-tabs {
+    display: none;
   }
 }
 
-.status-dot {
-  width: 7px;
-  height: 7px;
+/* Right Section: Action icons and profiles */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Circular Action Icon Buttons (Search, Heart, 9-dot grid from reference) */
+.header-action-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: #10b981;
-  box-shadow: 0 0 8px #10b981;
-  animation: pulse-dot 2s infinite;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-@keyframes pulse-dot {
-  0% { transform: scale(0.95); opacity: 0.8; }
-  50% { transform: scale(1.15); opacity: 1; }
-  100% { transform: scale(0.95); opacity: 0.8; }
+.header-action-icon-btn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
 }
 
+.header-action-icon-btn.grid-menu-btn {
+  color: #154734;
+}
+
+.header-action-icon-btn.grid-menu-btn:hover {
+  background: #ecfdf5;
+  color: #0d3224;
+  border-color: #a7f3d0;
+}
+
+/* Portal Switcher Buttons */
+.btn-switch-portal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-switch-portal.to-workspace {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #154734;
+}
+
+.btn-switch-portal.to-workspace:hover {
+  background: #dcfce7;
+  border-color: #86efac;
+  transform: translateY(-1px);
+}
+
+.btn-switch-portal.to-public {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #c2410c;
+}
+
+.btn-switch-portal.to-public:hover {
+  background: #ffedd5;
+  transform: translateY(-1px);
+}
+
+/* User profile pill */
 .user-profile-pill {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 4px 10px 4px 6px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--surface);
+  gap: 8px;
+  padding: 4px 12px 4px 5px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .user-profile-pill:hover {
-  background: var(--surface-hover);
+  background: #f8fafc;
+  border-color: #cbd5e1;
 }
 
 .user-avatar {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--teal-500));
+  background: linear-gradient(135deg, #f97316, #ea580c);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
+  box-shadow: 0 2px 6px rgba(249, 115, 22, 0.3);
 }
 
 .user-role-label {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
-  color: var(--text-h);
+  color: #334155;
 }
 
 .btn-header-logout {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
+  padding: 8px 14px;
   font-size: 13px;
   font-weight: 600;
-  border-radius: 8px;
-  border: 1px solid var(--border, #e2e8f0);
-  background: var(--surface, #ffffff);
-  color: var(--text-h, #334155);
+  border-radius: 9999px;
+  border: 1px solid #fecaca;
+  background: #ffffff;
+  color: #dc2626;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .btn-header-logout:hover {
   background: #fef2f2;
-  color: #dc2626;
-  border-color: #fecaca;
+  border-color: #f87171;
 }
 
 .btn-header-login {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 16px;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 8px;
+  padding: 9px 20px;
+  font-size: 13.5px;
+  font-weight: 700;
+  border-radius: 9999px;
   border: none;
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   color: #ffffff;
   cursor: pointer;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.32);
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
 }
 
 .btn-header-login:hover {
-  opacity: 0.95;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(249, 115, 22, 0.42);
 }
 
-@media (max-width: 768px) {
-  .header-center {
+/* Mobile Dropdown */
+.mobile-nav-dropdown {
+  position: absolute;
+  top: 76px;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 2px solid var(--border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  z-index: 99;
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mobile-nav-item:hover,
+.mobile-nav-item.active {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.mobile-nav-item.workspace-link {
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  color: #154734;
+  font-weight: 700;
+}
+
+@media (max-width: 680px) {
+  .header-container {
+    padding: 0 16px;
+  }
+  .btn-switch-portal span {
     display: none;
   }
-  .system-status-pill {
+  .brand-tagline {
+    display: none;
+  }
+  .user-role-label {
     display: none;
   }
 }

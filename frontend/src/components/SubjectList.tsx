@@ -32,14 +32,125 @@ export const SubjectList: React.FC<SubjectListProps> = ({ onSelectSubject }) => 
     fetchSubjects();
   }, [fetchSubjects]);
 
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const filteredSubjects = subjects.filter((s) =>
+    s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (s.description && s.description.toLowerCase().includes(searchTerm.toLowerCase())),
+  );
+
+  const getSpecialtyIcon = (title: string) => {
+    const lower = title.toLowerCase();
+    if (lower.includes('cardio') || lower.includes('heart') || lower.includes('vascular')) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="2" className="subject-specialty-svg">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          <path d="M3.5 12h3l2-4 3 8 2-4h7" />
+        </svg>
+      );
+    }
+    if (lower.includes('neuro') || lower.includes('brain') || lower.includes('spine')) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0284c7" strokeWidth="2" className="subject-specialty-svg">
+          <path d="M12 2a4 4 0 0 0-4 4c0 1.1.45 2.1 1.17 2.83L6.5 11.5a3.5 3.5 0 0 0 0 5l4.5 4.5 4.5-4.5a3.5 3.5 0 0 0 0-5l-2.67-2.67C13.55 8.1 14 7.1 14 6a4 4 0 0 0-4-4z" />
+          <path d="M9 14l3-3 3 3" />
+        </svg>
+      );
+    }
+    if (lower.includes('anat') || lower.includes('thorax') || lower.includes('bone') || lower.includes('limb')) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="2" className="subject-specialty-svg">
+          <path d="M12 3v18M7 7h10M6 12h12M7 17h10" />
+        </svg>
+      );
+    }
+    if (lower.includes('surg') || lower.includes('operat')) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" className="subject-specialty-svg">
+          <line x1="6" y1="18" x2="18" y2="6" />
+          <circle cx="6" cy="6" r="3" />
+          <circle cx="18" cy="18" r="3" />
+        </svg>
+      );
+    }
+    if (lower.includes('pediat') || lower.includes('child')) {
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="2" className="subject-specialty-svg">
+          <circle cx="12" cy="7" r="4" />
+          <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+        </svg>
+      );
+    }
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="#154734" strokeWidth="2" className="subject-specialty-svg">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+      </svg>
+    );
+  };
+
   return (
-    <section className="medcore-subject-list-container">
-      <div className="subject-list-header">
-        <h2 className="subject-list-title">Medical Subjects</h2>
-        <p className="subject-list-subtitle">
-          Select a subject to explore core medical topics, peer-reviewed articles, and clinical guides.
-        </p>
-      </div>
+    <div className="medcore-specialties-page-wrapper">
+      {/* HERO SECTION */}
+      <section className="specialties-hero-section">
+        <div
+          className="specialties-hero-bg-image"
+          style={{ backgroundImage: "url('/images/neuro-brain.jpg')" }}
+        />
+        <div className="specialties-hero-scenic-overlay" />
+        <div className="specialties-hero-wave-bg">
+          <svg className="specialties-organic-wave" viewBox="0 0 1440 180" fill="none" preserveAspectRatio="none">
+            <path
+              d="M0,80 C320,160 540,20 900,100 C1200,160 1360,60 1440,110 L1440,180 L0,180 Z"
+              fill="#fafaf7"
+            />
+          </svg>
+        </div>
+
+        <div className="specialties-hero-container">
+          <div className="specialties-hero-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+            </svg>
+            <span>CLINICAL CURRICULUM · MEDICAL SPECIALTIES</span>
+          </div>
+
+          <h1 className="specialties-hero-title">
+            Medical Specialties &amp; Anatomical Systems
+          </h1>
+
+          <p className="specialties-hero-subtitle">
+            Explore accredited modules, high-yield clinical pearls, surgical landmarks, and diagnostic algorithms organized systematically by medical discipline.
+          </p>
+
+          <div className="specialties-search-pill-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Filter specialties (e.g., Cardiology, Neurology, Anatomy)..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="specialties-search-input"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                className="clear-search-btn"
+                onClick={() => setSearchTerm('')}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="medcore-subject-list-container">
 
       {/* ERROR STATE */}
       {error && !loading ? (
@@ -124,9 +235,9 @@ export const SubjectList: React.FC<SubjectListProps> = ({ onSelectSubject }) => 
       ) : null}
 
       {/* SUBJECT GRID */}
-      {!loading && !error && subjects.length > 0 ? (
+      {!loading && !error && filteredSubjects.length > 0 ? (
         <div className="subject-grid" data-testid="subject-grid">
-          {subjects.map((subject) => (
+          {filteredSubjects.map((subject) => (
             <div
               key={subject.id}
               className="medcore-subject-card"
@@ -146,21 +257,10 @@ export const SubjectList: React.FC<SubjectListProps> = ({ onSelectSubject }) => 
                   {subject.iconUrl ? (
                     <img src={subject.iconUrl} alt={subject.title} className="subject-custom-icon" />
                   ) : (
-                    <svg
-                      className="subject-default-icon"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                    </svg>
+                    getSpecialtyIcon(subject.title)
                   )}
                 </div>
-                <div className="subject-badge-pill">Subject</div>
+                <div className="subject-badge-pill">Clinical Specialty</div>
               </div>
 
               <h3 className="subject-card-title">{subject.title}</h3>
@@ -189,7 +289,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({ onSelectSubject }) => 
                     : 'Explore Topics'}
                 </span>
                 <span className="subject-explore-link">
-                  Explore Topics
+                  <span>Explore Curriculum</span>
                   <svg
                     className="arrow-icon"
                     viewBox="0 0 24 24"
@@ -209,5 +309,6 @@ export const SubjectList: React.FC<SubjectListProps> = ({ onSelectSubject }) => 
         </div>
       ) : null}
     </section>
+  </div>
   );
 };

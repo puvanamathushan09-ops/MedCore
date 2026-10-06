@@ -3,6 +3,31 @@ import { parseRoute, pushRoute } from '../route-utils';
 
 describe('route-utils', () => {
   describe('parseRoute', () => {
+    it('parses home URL correctly for root /', () => {
+      const route = parseRoute('/');
+      expect(route).toEqual({ type: 'home' });
+    });
+
+    it('parses home URL correctly for /home', () => {
+      const route = parseRoute('/home');
+      expect(route).toEqual({ type: 'home' });
+    });
+
+    it('parses about URL correctly', () => {
+      const route = parseRoute('/about');
+      expect(route).toEqual({ type: 'about' });
+    });
+
+    it('parses contact URL correctly', () => {
+      const route = parseRoute('/contact');
+      expect(route).toEqual({ type: 'contact' });
+    });
+
+    it('parses articles list URL correctly for /articles', () => {
+      const route = parseRoute('/articles');
+      expect(route).toEqual({ type: 'article-list' });
+    });
+
     it('parses article detail URLs correctly', () => {
       const route = parseRoute('/articles/anatomical-terminology');
       expect(route).toEqual({
@@ -59,16 +84,6 @@ describe('route-utils', () => {
     it('parses register URL correctly', () => {
       const route = parseRoute('/register');
       expect(route).toEqual({ type: 'register' });
-    });
-
-    it('defaults to article list for home / root path', () => {
-      const route = parseRoute('/');
-      expect(route).toEqual({ type: 'article-list' });
-    });
-
-    it('defaults to article list for /articles path', () => {
-      const route = parseRoute('/articles');
-      expect(route).toEqual({ type: 'article-list' });
     });
   });
 

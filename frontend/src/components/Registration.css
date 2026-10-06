@@ -1,81 +1,253 @@
-.medcore-registration-container {
+/* MedCore Modern Clinical Split Registration Styles */
+
+.medcore-registration-page-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 140px);
-  padding: 40px 20px;
-  background: radial-gradient(circle at 50% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 60%);
+  min-height: calc(100vh - 120px);
+  padding: 48px 24px;
+  background-color: #fafaf7;
+  background-image: radial-gradient(circle at 10% 20%, rgba(21, 71, 52, 0.04) 0%, transparent 50%),
+                    radial-gradient(circle at 90% 80%, rgba(234, 88, 12, 0.04) 0%, transparent 50%);
 }
 
-.registration-card {
+.medcore-registration-split-card {
+  display: flex;
   width: 100%;
-  max-width: 480px;
-  background: var(--bg-card, #ffffff);
-  border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 16px;
-  padding: 40px 36px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  max-width: 1100px;
+  min-height: 680px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.03);
+}
+
+/* =========================================================================
+   LEFT PANEL: VISUAL SHOWCASE
+   ========================================================================= */
+.registration-visual-panel {
+  flex: 1.1;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 48px 40px;
+  overflow: hidden;
+}
+
+.registration-visual-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.45) 0%,
+    rgba(15, 23, 42, 0.78) 55%,
+    rgba(15, 23, 42, 0.96) 100%
+  );
+  z-index: 1;
+}
+
+.registration-visual-content {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+}
+
+.registration-visual-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.registration-visual-title {
+  font-size: 32px;
+  font-weight: 850;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 14px;
+}
+
+.registration-visual-desc {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin: 0 0 28px;
+  max-width: 440px;
+}
+
+.registration-visual-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.reg-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.reg-feature-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(74, 222, 128, 0.15);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.reg-feature-item strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 2px;
+}
+
+.reg-feature-item span {
+  display: block;
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.reg-stat-pill-row {
+  display: flex;
+  gap: 12px;
+}
+
+.reg-stat-card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+}
+
+.reg-stat-card strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 850;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.reg-stat-card span {
+  display: block;
+  font-size: 10.5px;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-top: 2px;
+}
+
+/* =========================================================================
+   RIGHT PANEL: FORM
+   ========================================================================= */
+.registration-form-panel {
+  flex: 1.15;
+  padding: 40px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: #ffffff;
+  overflow-y: auto;
+  max-height: 820px;
 }
 
 .registration-brand-header {
-  text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .registration-logo-wrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #154734 0%, #0d2e21 100%);
+  border-radius: 12px;
   color: #ffffff;
   margin-bottom: 16px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 4px 14px rgba(21, 71, 52, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.registration-logo-wrapper:hover {
+  transform: scale(1.05);
 }
 
 .registration-brand-icon {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
 }
 
 .registration-title {
   font-size: 24px;
-  font-weight: 700;
-  color: var(--text-h, #0f172a);
-  margin: 0 0 8px 0;
-  letter-spacing: -0.02em;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+  margin: 0 0 6px;
 }
 
+.registration-subtitle {
+  font-size: 13.5px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* PORTAL SWITCHER TABS */
 .registration-portal-tabs {
   display: flex;
   background: #f1f5f9;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
   gap: 4px;
 }
 
 .portal-tab {
   flex: 1;
-  padding: 9px 12px;
+  padding: 10px 14px;
   background: none;
   border: none;
-  border-radius: 8px;
+  border-radius: 9px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-align: center;
 }
 
 .portal-tab.active {
   background: #ffffff;
-  color: #0f172a;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: #154734;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
 }
 
 .reviewer-verification-notice {
@@ -85,11 +257,11 @@
   padding: 12px 14px;
   background-color: #fffbeb;
   border: 1px solid #fef3c7;
-  border-radius: 10px;
+  border-radius: 12px;
   color: #b45309;
-  font-size: 13px;
-  line-height: 1.4;
-  margin-bottom: 20px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  margin-bottom: 18px;
 }
 
 .reviewer-verification-notice svg {
@@ -98,14 +270,14 @@
 }
 
 .section-divider-title {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11.5px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-  margin: 12px 0 6px 0;
+  letter-spacing: 0.06em;
+  color: #154734;
+  margin: 16px 0 8px 0;
   padding-bottom: 4px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .plain-input,
@@ -113,10 +285,10 @@
   width: 100%;
   padding: 11px 14px;
   font-size: 14px;
-  border: 1px solid var(--border-color, #cbd5e1);
+  border: 1.5px solid #e2e8f0;
   border-radius: 10px;
-  background-color: var(--bg-main, #ffffff);
-  color: var(--text-h, #0f172a);
+  background-color: #f8fafc;
+  color: #0f172a;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
@@ -124,15 +296,15 @@
 
 .plain-input:focus,
 .registration-textarea:focus {
-  border-color: #0ea5e9;
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+  border-color: #154734;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(21, 71, 52, 0.1);
 }
 
-.registration-subtitle {
-  font-size: 14px;
-  color: var(--text-muted, #64748b);
-  margin: 0;
-  line-height: 1.5;
+.registration-textarea {
+  resize: vertical;
+  min-height: 72px;
+  font-family: inherit;
 }
 
 .registration-error-banner {
@@ -142,7 +314,7 @@
   padding: 12px 16px;
   background-color: #fef2f2;
   border: 1px solid #fecaca;
-  border-radius: 10px;
+  border-radius: 12px;
   color: #dc2626;
   font-size: 13px;
   font-weight: 500;
@@ -150,65 +322,30 @@
   line-height: 1.4;
 }
 
-.registration-success-card {
-  text-align: center;
-  padding: 10px 0 20px 0;
-}
-
-.success-icon-wrapper {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  background-color: #dcfce7;
-  color: #16a34a;
-  border-radius: 50%;
-  margin-bottom: 16px;
-}
-
-.success-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 8px 0;
-}
-
-.success-message {
-  font-size: 14px;
-  color: #475569;
-  line-height: 1.5;
-  margin: 0 0 24px 0;
-}
-
 .registration-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
-.form-row {
+.name-fields-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 12px;
 }
 
-@media (max-width: 480px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-.registration-field-group {
+.form-field-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
-.registration-field-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-h, #334155);
+.form-field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 .required-star {
@@ -219,119 +356,185 @@
   position: relative;
   display: flex;
   align-items: center;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0 12px;
+  transition: all 0.2s ease;
+}
+
+.input-with-icon:focus-within {
+  background: #ffffff;
+  border-color: #154734;
+  box-shadow: 0 0 0 3px rgba(21, 71, 52, 0.1);
 }
 
 .field-icon {
-  position: absolute;
-  left: 14px;
-  width: 18px;
-  height: 18px;
   color: #94a3b8;
-  pointer-events: none;
+  flex-shrink: 0;
+  margin-right: 10px;
 }
 
 .registration-input {
   width: 100%;
-  padding: 11px 14px 11px 42px;
-  font-size: 14px;
-  border: 1px solid var(--border-color, #cbd5e1);
-  border-radius: 10px;
-  background-color: var(--bg-main, #ffffff);
-  color: var(--text-h, #0f172a);
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.registration-input:focus {
-  border-color: #0ea5e9;
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
-}
-
-.registration-submit-btn, .btn-go-login {
-  width: 100%;
-  padding: 12px 20px;
-  margin-top: 8px;
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-  color: #ffffff;
   border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
-  display: inline-flex;
+  background: transparent;
+  outline: none;
+  padding: 11px 0;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.field-helper-hint {
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.registration-submit-btn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
+  padding: 13px 24px;
+  background: linear-gradient(135deg, #154734 0%, #1e5e46 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 750;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(21, 71, 52, 0.25);
+  transition: all 0.2s ease;
+  margin-top: 6px;
 }
 
-.registration-submit-btn:hover:not(:disabled), .btn-go-login:hover {
-  opacity: 0.95;
-}
-
-.registration-submit-btn:active:not(:disabled), .btn-go-login:active {
-  transform: scale(0.99);
+.registration-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #123d2c 0%, #154734 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(21, 71, 52, 0.35);
 }
 
 .registration-submit-btn:disabled {
-  opacity: 0.7;
+  opacity: 0.65;
   cursor: not-allowed;
 }
 
 .submit-loading {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
 }
 
 .spinner-icon {
-  width: 16px;
-  height: 16px;
-  animation: spin 1s linear infinite;
+  width: 18px;
+  height: 18px;
+  animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* SUCCESS STATE */
+.registration-success-card {
+  text-align: center;
+  padding: 24px 8px;
 }
 
+.success-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  margin-bottom: 18px;
+}
+
+.success-title {
+  font-size: 22px;
+  font-weight: 850;
+  color: #0f172a;
+  margin: 0 0 10px;
+}
+
+.success-message {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.55;
+  margin: 0 0 24px;
+}
+
+.btn-proceed-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #154734 0%, #1e5e46 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(21, 71, 52, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-proceed-login:hover {
+  transform: translateY(-1px);
+}
+
+/* FOOTER */
 .registration-footer-info {
   margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-color, #f1f5f9);
+  padding-top: 18px;
+  border-top: 1px solid #f1f5f9;
   text-align: center;
 }
 
 .auth-switch-text {
   font-size: 13px;
-  color: var(--text-muted, #64748b);
-  margin: 0 0 8px 0;
+  color: #64748b;
+  margin: 0 0 8px;
 }
 
 .btn-auth-switch {
   background: none;
   border: none;
-  color: #0ea5e9;
-  font-weight: 600;
+  color: #ea580c;
+  font-weight: 750;
   cursor: pointer;
   padding: 0;
+  margin-left: 4px;
   font-size: 13px;
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .btn-auth-switch:hover {
-  color: #0284c7;
+  color: #c2410c;
 }
 
 .student-badge-hint {
-  font-size: 12px;
-  color: var(--text-muted, #94a3b8);
-  margin: 12px 0 0 0;
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin: 0;
   line-height: 1.4;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 900px) {
+  .medcore-registration-split-card {
+    flex-direction: column;
+    max-width: 480px;
+  }
+
+  .registration-visual-panel {
+    display: none;
+  }
+
+  .registration-form-panel {
+    padding: 32px 24px;
+    max-height: none;
+  }
 }

@@ -1,61 +1,198 @@
-/* Subject List Container */
-.medcore-subject-list-container {
-  max-width: 1200px;
+/* =========================================================================
+   MEDCORE MEDICAL SPECIALTIES & CURRICULUM STYLES (POMAII ORGANIC THEME)
+   ========================================================================= */
+
+.medcore-specialties-page-wrapper {
+  width: 100%;
+  background-color: #fafaf7;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================================
+   SPECIALTIES HERO SECTION
+   ========================================================================= */
+.specialties-hero-section {
+  width: 100%;
+  background: #f2f7f4;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+  padding: 56px 24px 44px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.specialties-hero-bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center 35%;
+  z-index: 1;
+  opacity: 0.85;
+}
+
+.specialties-hero-scenic-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.06) 45%, rgba(250, 250, 247, 0.5) 80%, #fafaf7 100%);
+  z-index: 1;
+}
+
+.specialties-hero-wave-bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.specialties-organic-wave {
+  width: 100%;
+  height: 100%;
+}
+
+.specialties-hero-container {
+  max-width: 960px;
   margin: 0 auto;
-  padding: 32px 20px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.specialties-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(21, 71, 52, 0.2);
+  box-shadow: 0 2px 8px rgba(21, 71, 52, 0.06);
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #154734;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 18px;
+}
+
+.specialties-hero-title {
+  font-size: 42px;
+  font-weight: 850;
+  line-height: 1.15;
+  color: #0f172a;
+  letter-spacing: -0.035em;
+  margin: 0 0 16px;
+  max-width: 860px;
+}
+
+@media (max-width: 768px) {
+  .specialties-hero-title {
+    font-size: 30px;
+  }
+}
+
+.specialties-hero-subtitle {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0 0 28px;
+  max-width: 740px;
+}
+
+.specialties-search-pill-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 580px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  transition: all 0.2s ease;
+}
+
+.specialties-search-pill-box:focus-within {
+  border-color: #154734;
+  box-shadow: 0 6px 20px rgba(21, 71, 52, 0.12);
+}
+
+.specialties-search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.clear-search-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.clear-search-btn:hover {
+  color: #0f172a;
+}
+
+/* =========================================================================
+   SUBJECT GRID CONTAINER
+   ========================================================================= */
+.medcore-subject-list-container {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
   box-sizing: border-box;
 }
 
-.subject-list-header {
-  margin-bottom: 32px;
-  text-align: left;
-}
-
-.subject-list-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--text-h);
-  letter-spacing: -0.8px;
-  margin: 0 0 8px 0;
-}
-
-.subject-list-subtitle {
-  font-size: 16px;
-  color: var(--text);
-  margin: 0;
-  max-width: 680px;
-  line-height: 1.5;
-}
-
-/* Subject Grid */
 .subject-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
 }
 
 .medcore-subject-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  box-shadow: var(--shadow);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
   text-align: left;
+  position: relative;
 }
 
 .medcore-subject-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-  box-shadow: 0 12px 24px -4px rgba(170, 59, 255, 0.15);
+  transform: translateY(-6px);
+  border-color: #cbd5e1;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.1);
 }
 
 .medcore-subject-card:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid #154734;
   outline-offset: 2px;
 }
 
@@ -63,23 +200,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .subject-icon-box {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: var(--accent-bg);
-  color: var(--accent);
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.subject-default-icon {
-  width: 24px;
-  height: 24px;
+.subject-specialty-svg {
+  width: 28px;
+  height: 28px;
 }
 
 .subject-custom-icon {
@@ -89,29 +226,30 @@
 }
 
 .subject-badge-pill {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent);
-  background: var(--accent-bg);
-  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #154734;
+  background: #f0fdf4;
+  border: 1px solid #dcfce7;
+  padding: 4px 12px;
   border-radius: 9999px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
 }
 
 .subject-card-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-h);
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
   margin: 0 0 10px 0;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .subject-card-description {
-  font-size: 14px;
-  color: var(--text);
-  line-height: 1.5;
-  margin: 0 0 20px 0;
+  font-size: 14.5px;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
   flex-grow: 1;
 }
 
@@ -119,111 +257,91 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-  font-size: 13px;
+  padding-top: 18px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 13.5px;
 }
 
 .subject-topic-count {
   display: flex;
   align-items: center;
-  gap: 6px;
-  color: var(--text);
-  font-weight: 500;
+  gap: 8px;
+  color: #64748b;
+  font-weight: 600;
 }
 
 .subject-topic-count .meta-icon {
   width: 16px;
   height: 16px;
-  color: var(--text);
+  color: #94a3b8;
 }
 
 .subject-explore-link {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--accent);
-  font-weight: 600;
-  transition: gap 0.2s ease;
+  color: #ea580c;
+  font-weight: 700;
+  font-size: 13px;
+  transition: transform 0.2s ease;
 }
 
 .medcore-subject-card:hover .subject-explore-link {
-  gap: 10px;
+  transform: translateX(4px);
 }
 
-.arrow-icon {
-  width: 16px;
-  height: 16px;
+.subject-explore-link .arrow-icon {
+  width: 14px;
+  height: 14px;
 }
 
-/* Skeleton Loading */
+/* Skeletons & State Cards */
 .subject-grid-skeleton {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
 }
 
 .skeleton-subject-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 28px;
+  height: 220px;
   display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
 .skeleton-subject-icon {
   width: 48px;
   height: 48px;
-  border-radius: 10px;
-  background: var(--border);
-  animation: skeleton-pulse 1.5s infinite ease-in-out;
-  flex-shrink: 0;
-}
-
-.skeleton-subject-body {
-  flex-grow: 1;
+  border-radius: 12px;
+  background: #f1f5f9;
+  animation: pulse 1.5s infinite;
 }
 
 .skeleton-title {
-  height: 20px;
   width: 60%;
-  background: var(--border);
-  border-radius: 4px;
-  margin-bottom: 12px;
-  animation: skeleton-pulse 1.5s infinite ease-in-out;
+  height: 20px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  animation: pulse 1.5s infinite;
 }
 
 .skeleton-text {
+  width: 90%;
   height: 14px;
-  width: 100%;
-  background: var(--border);
+  background: #f1f5f9;
   border-radius: 4px;
-  margin-bottom: 8px;
-  animation: skeleton-pulse 1.5s infinite ease-in-out;
+  animation: pulse 1.5s infinite;
 }
 
 .skeleton-text.short {
-  width: 75%;
+  width: 45%;
 }
 
-.skeleton-meta {
-  height: 14px;
-  width: 40%;
-  background: var(--border);
-  border-radius: 4px;
-  margin-top: 16px;
-  animation: skeleton-pulse 1.5s infinite ease-in-out;
-}
-
-@keyframes skeleton-pulse {
-  0% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 0.6;
-  }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }

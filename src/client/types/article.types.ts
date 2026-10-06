@@ -9,6 +9,19 @@ export interface AuthorSummary {
   avatarUrl?: string | null;
 }
 
+export interface ArticleSubjectSummary {
+  id: string;
+  title: string;
+  slug: string;
+}
+
+export interface ArticleTopicSummary {
+  id: string;
+  subjectId?: string;
+  title: string;
+  slug: string;
+}
+
 export interface Article {
   id: string;
   title: string;
@@ -22,6 +35,10 @@ export interface Article {
   updatedAt: string | Date;
   authorId: string;
   author?: AuthorSummary;
+  subjectId?: string | null;
+  topicId?: string | null;
+  subject?: ArticleSubjectSummary | null;
+  topic?: ArticleTopicSummary | null;
 }
 
 export interface CreateArticleInput {
